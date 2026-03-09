@@ -178,3 +178,4 @@ for(i in 1:length(vars)){
   }
 }
 
+plot_cross_dimension_precent("driver_presence_visibility", "measurements")

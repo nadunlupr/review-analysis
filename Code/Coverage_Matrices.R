@@ -88,11 +88,7 @@ plot_coverage_matrix <- function(var1, var2) {
     geom_text(aes(label = n), size = 3, color = "white") +
     scale_fill_viridis_c() +
     labs(
-      title = paste(
-        stringr::str_to_title(gsub("_", " ", var1)),
-        "vs",
-        stringr::str_to_title(gsub("_", " ", var2))
-      ),
+      title = NULL,
       x = stringr::str_to_title(gsub("_", " ", var2)),
       y = stringr::str_to_title(gsub("_", " ", var1)),
       fill = "Number of Studies"
@@ -114,6 +110,8 @@ var_pairs <- combn(vars, 2, simplify = FALSE)
 coverage_plots <- lapply(var_pairs, function(pair) {
   plot_coverage_matrix(pair[1], pair[2])
 })
+
+plot_coverage_matrix("driver_presence_visibility", "scenario")
 
 # ============================================================
 # 6 Save all matrices into one PDF
