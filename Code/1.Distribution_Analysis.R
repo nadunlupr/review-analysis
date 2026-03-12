@@ -47,7 +47,7 @@ plot_distribution <- function(variable){
   p <- data %>%
     count(.data[[variable]]) %>%
     mutate(
-      label = stringr::str_wrap(as.character(.data[[variable]]), width = 18)
+      label = stringr::str_wrap(as.character(.data[[variable]]), width = 10)
     ) %>%
     ggplot(aes(
       x = reorder(label, n),

@@ -73,37 +73,94 @@ plot_cross_dimension <- function(var1, var2){
 
 plot_cross_dimension_precent <- function(var1, var2){
   
+  cols <- viridisLite::viridis(length(unique(data[[var2]])))
+  cols[6] <- "#C7E35A"
+  cols[5] <- "#BDBDBD"
+  
   data %>%
     count(.data[[var1]], .data[[var2]]) %>%
     group_by(.data[[var1]]) %>%
-    mutate(percent = n/sum(n)) %>%
-    
+    mutate(percent = n / sum(n)) %>%
+    ungroup() %>%
     ggplot(aes(
-      x = .data[[var1]],
-      y = percent,
+      x = percent,
+      y = stringr::str_wrap(
+        as.character(.data[[var1]]),
+        width = 10,
+        whitespace_only = FALSE
+      ),
       fill = .data[[var2]]
     )) +
-    coord_flip() +
-    scale_fill_viridis_d()+
-    geom_bar(stat = "identity") +
-    
+    scale_fill_manual(values = cols) +
+    geom_col() +
     geom_text(
       aes(label = scales::percent(percent)),
       position = position_stack(vjust = 0.5),
       color = "white",
       size = 4
     ) +
-    
-    scale_y_continuous(labels = scales::percent_format()) +
-    
+    scale_x_continuous(labels = scales::percent_format()) +
     labs(
-      x = stringr::str_to_title(gsub("_"," ", var1)),
-      y = "Percentage of Studies",
+      x = "Percentage of Studies",
+      y = stringr::str_to_title(gsub("_"," ", var1)),
       fill = stringr::str_to_title(gsub("_"," ", var2))
     ) +
-    
-    theme_minimal()
-  
+    theme_minimal(base_size = 16) +
+    theme(
+      panel.grid.minor = element_blank(),
+      
+      axis.text.x = element_text(
+        color = "black",
+        size = 14,
+        hjust = 0.5,
+        vjust = 0.5,
+        margin = margin(t = 2)
+      ),
+      
+      axis.text.y = element_text(
+        color = "black",
+        size = 14,
+        hjust = 0,
+        vjust = 0.5,
+        margin = margin(r = -2)
+      ),
+      
+      axis.title.x = element_text(
+        color = "black",
+        face = "bold",
+        size = 16,
+        hjust = 0.5,
+        margin = margin(t = 12)
+      ),
+      
+      axis.title.y = element_text(
+        color = "black",
+        face = "bold",
+        size = 16,
+        hjust = 0.5,
+        margin = margin(r = 12)
+      ),
+      
+      legend.position = "bottom",
+      legend.direction = "horizontal",
+      legend.title = element_text(
+        color = "black",
+        face = "bold",
+        size = 14
+      ),
+      legend.text = element_text(
+        color = "black",
+        size = 12
+      ),
+      
+      panel.border = element_rect(
+        color = "grey40",
+        fill = NA,
+        linewidth = 0.8
+      ),
+      plot.margin = margin(t = 10, r = 20, b = 10, l = 10)
+    ) +
+    guides(fill = guide_legend(nrow = 1, byrow = TRUE))
 }
 
 # ======================================
@@ -178,4 +235,4 @@ for(i in 1:length(vars)){
   }
 }
 
-plot_cross_dimension_precent("driver_presence_visibility", "measurements")
+plot_cross_dimension_precent("scenario", "measurements")
