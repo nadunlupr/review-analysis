@@ -160,3 +160,26 @@ plots[[17]]
 # plots[[20]]
 plots[[21]]
 plots[[22]]
+
+ggsave(
+  "figures/PlatformCount.png",
+  plots[[1]],
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+
+ggsave(
+  "figures/DisplayCount.png",
+  plots[[6]],
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+ggsave(
+  "figures/ScenarioCount.png",
+  plots[[9]],
+  width = 7,
+  height = 5,
+  dpi = 300
+)

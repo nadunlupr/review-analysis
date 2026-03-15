@@ -160,8 +160,8 @@ plot_cross_dimension_precent <- function(var1, var2){
       ),
       plot.margin = margin(t = 10, r = 20, b = 10, l = 10)
     ) +
-    guides(fill = guide_legend(nrow = 1, byrow = TRUE))
-}
+    guides(fill = guide_legend(ncol = 3, byrow = TRUE))
+  }
 
 # ======================================
 # Example plot in R viewer
@@ -236,3 +236,39 @@ for(i in 1:length(vars)){
 }
 
 plot_cross_dimension_precent("scenario", "measurements")
+plot_cross_dimension_precent("platform", "display")
+plot_cross_dimension_precent("driver_presence_visibility", "measurements")
+
+
+
+ggsave(
+  "figures_cross/Platform_V_Display.png",
+  plot_cross_dimension_precent("platform", "display"),
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+
+ggsave(
+  "figures_cross/Scenario_V_Measurements.png",
+  plot_cross_dimension_precent("scenario", "measurements"),
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+
+ggsave(
+  "figures_cross/Driver_Presence_V_Measurements.png",
+  plot_cross_dimension_precent("driver_presence_visibility", "measurements"),
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+
+ggsave(
+  "figures_cross/driver_presence_v_measurements.png",
+  plot_cross_dimension_precent("driver_presence_visibility", "measurements"),
+  width = 7,
+  height = 5,
+  dpi = 300
+)
