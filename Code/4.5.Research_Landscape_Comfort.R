@@ -96,6 +96,24 @@ normalize_factor <- function(x) {
   )
 }
 
+normalize_focus <- function(x) {
+  x <- clean_text(x)
+  
+  dplyr::case_when(
+    stringr::str_to_lower(x) %in% c("anxiety") ~ "Anxiety",
+    stringr::str_to_lower(x) %in% c("affectivity", "affective state", "affective states") ~ "Affectivity",
+    stringr::str_to_lower(x) %in% c("discomfort", "general discomfort") ~ "Discomfort",
+    stringr::str_to_lower(x) %in% c("motion sickness", "motionsickness") ~ "Motion Sickness",
+    stringr::str_to_lower(x) %in% c("attention") ~ "Attention",
+    stringr::str_to_lower(x) %in% c("decision making", "decision-making") ~ "Decision Making",
+    stringr::str_to_lower(x) %in% c("mind wandering", "mind-wandering", "mind wondering") ~ "Mind Wandering",
+    stringr::str_to_lower(x) %in% c("sense of agency") ~ "Sense of Agency",
+    stringr::str_to_lower(x) %in% c("communication") ~ "Communication",
+    stringr::str_to_lower(x) %in% c("taking over control", "take over control", "take-over control", "takeover control") ~ "Taking Over Control",
+    TRUE ~ stringr::str_to_title(x)
+  )
+}
+
 split_expand <- function(df, factor_col, factor_group) {
   df %>%
     dplyr::select(all_of(c(study_id_col, col_focus, col_scenario, factor_col))) %>%
@@ -106,13 +124,17 @@ split_expand <- function(df, factor_col, factor_group) {
       comfort_raw = all_of(factor_col)
     ) %>%
     dplyr::mutate(
-      focus_condition = clean_text(focus_condition),
-      scenario = clean_text(scenario),
+      focus_condition = normalize_focus(focus_condition),
+      scenario = scenario %>%
+        clean_text() %>%
+        stringr::str_replace_all("\\s*\\+\\s*", "+"),
       comfort_raw = clean_text(comfort_raw)
     ) %>%
     tidyr::separate_rows(comfort_raw, sep = "\\+") %>%
+    tidyr::separate_rows(scenario, sep = "\\+") %>%
     dplyr::mutate(
       comfort_raw = stringr::str_trim(comfort_raw),
+      scenario = stringr::str_trim(scenario),
       comfort_factor = normalize_factor(comfort_raw),
       factor_group = factor_group
     ) %>%
@@ -174,10 +196,38 @@ vehicle_levels <- vehicle_levels[vehicle_levels %in% unique(landscape_data$comfo
 user_levels <- user_levels[user_levels %in% unique(landscape_data$comfort_factor)]
 
 display_levels <- c(vehicle_levels, user_levels)
-focus_levels <- unique(landscape_data$focus_condition)
+
+affective_levels <- c("Anxiety", "Affectivity", "Discomfort")
+physiological_levels <- c("Motion Sickness")
+cognitive_levels <- c("Attention", "Decision Making", "Mind Wandering")
+interaction_levels <- c("Sense of Agency", "Communication", "Taking Over Control", "Driving Style")
+
+focus_levels <- c(
+  affective_levels,
+  physiological_levels,
+  cognitive_levels,
+  interaction_levels
+)
+
+observed_focus <- unique(landscape_data$focus_condition)
+unknown_focus <- setdiff(observed_focus, focus_levels)
+
+if (length(unknown_focus) > 0) {
+  stop(
+    paste0(
+      "These Focus Condition values were not assigned to a group: ",
+      paste(unknown_focus, collapse = ", ")
+    )
+  )
+}
+
+focus_levels <- focus_levels[focus_levels %in% observed_focus]
 
 landscape_data <- landscape_data %>%
-  dplyr::filter(comfort_factor %in% display_levels) %>%
+  dplyr::filter(
+    comfort_factor %in% display_levels,
+    focus_condition %in% focus_levels
+  ) %>%
   dplyr::mutate(
     comfort_factor = factor(comfort_factor, levels = display_levels),
     focus_condition = factor(focus_condition, levels = focus_levels),
@@ -185,6 +235,7 @@ landscape_data <- landscape_data %>%
   )
 
 n_y <- length(display_levels)
+n_x <- length(focus_levels)
 
 # ============================================================
 # 7 Shared row map and band positions
@@ -344,13 +395,10 @@ p_bubble <- ggplot(
   geom_point(alpha = 0.9) +
   scale_size(range = c(3, 14)) +
   scale_color_viridis_d(option = "D", end = 0.9) +
-  scale_x_discrete(
-    labels = function(x) stringr::str_wrap(x, width = 14),
-    expand = c(0, 0)
-  ) +
+  scale_x_discrete(expand = c(0, 0)) +
   scale_y_discrete(expand = c(0, 0)) +
   labs(
-    x = "Focus Condition",
+    x = NULL,
     y = NULL,
     size = "Number of Studies",
     color = "Scenario"
@@ -359,20 +407,10 @@ p_bubble <- ggplot(
   theme(
     panel.grid.minor = element_blank(),
     panel.grid.major.y = element_blank(),
-    axis.text.x = element_text(
-      color = "black",
-      size = 12,
-      angle = 90,
-      hjust = 0,
-      vjust = 0.5
-    ),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
     axis.text.y = element_blank(),
-    axis.title.x = element_text(
-      face = "bold",
-      size = 16,
-      color = "black",
-      margin = margin(t = 14)
-    ),
     axis.title.y = element_blank(),
     legend.position = "bottom",
     legend.direction = "horizontal",
@@ -381,6 +419,8 @@ p_bubble <- ggplot(
     legend.justification = "center",
     legend.title = element_text(face = "bold", color = "black"),
     legend.text = element_text(color = "black"),
+    legend.key.height = unit(0.9, "lines"),
+    legend.key.width = unit(1.2, "lines"),
     panel.border = element_rect(color = "grey40", fill = NA, linewidth = 0.8),
     plot.margin = margin(0, 0, 0, 0)
   ) +
@@ -388,7 +428,7 @@ p_bubble <- ggplot(
     size = guide_legend(
       title.position = "left",
       title.hjust = 0,
-      title.vjust = 1,
+      title.vjust = 0.5,
       direction = "horizontal",
       nrow = 1,
       byrow = TRUE,
@@ -406,13 +446,156 @@ p_bubble <- ggplot(
   )
 
 # ============================================================
-# 12 Combine panels
+# 12 X-axis grouping data
+# ============================================================
+
+x_group_map <- tibble::tibble(
+  focus_condition = focus_levels,
+  x = seq_along(focus_levels),
+  x_group = dplyr::case_when(
+    focus_condition %in% affective_levels ~ "AS",
+    focus_condition %in% physiological_levels ~ "PS",
+    focus_condition %in% cognitive_levels ~ "CS",
+    focus_condition %in% interaction_levels ~ "I/P"
+  )
+)
+
+x_group_bands <- x_group_map %>%
+  dplyr::group_by(x_group) %>%
+  dplyr::summarise(
+    xmin = min(x) - 0.5,
+    xmax = max(x) + 0.5,
+    xmid = mean(x),
+    .groups = "drop"
+  ) %>%
+  dplyr::mutate(
+    fill = dplyr::case_when(
+      x_group == "AS" ~ "#DDEBF7",
+      x_group == "PS" ~ "#EADCF8",
+      x_group == "CS" ~ "#F4CCCC",
+      x_group == "I/P" ~ "#D0E0E3"
+    )
+  )
+
+x_tick_df <- x_group_map %>%
+  dplyr::transmute(
+    x = x,
+    label = stringr::str_wrap(focus_condition, width = 12)
+  )
+
+# ============================================================
+# 13 Panel 5: x tick-label strip
+# ============================================================
+
+p_xticks <- ggplot() +
+  geom_rect(
+    data = x_group_bands,
+    aes(xmin = xmin, xmax = xmax, ymin = 0, ymax = 1, fill = fill),
+    inherit.aes = FALSE,
+    color = NA,
+    alpha = 1
+  ) +
+  scale_fill_identity() +
+  ggtext::geom_richtext(
+    data = x_tick_df,
+    aes(
+      x = x,
+      y = 0.06,
+      label = gsub("\n", "<br>", label)
+    ),
+    angle = 90,
+    hjust = 0,
+    vjust = 0.5,
+    fill = NA,
+    label.color = NA,
+    label.padding = grid::unit(c(0, 0, 0, 0), "pt"),
+    label.margin = grid::unit(c(0, 0, 0, 0), "pt"),
+    size = 3.9,
+    lineheight = 1.0
+  ) +
+  scale_x_continuous(limits = c(0.5, n_x + 0.5), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  theme_void() +
+  theme(plot.margin = margin(0, 0, 0, 0))
+
+# ============================================================
+# 14 Panel 6: x group-label strip
+# ============================================================
+
+p_xgroup <- ggplot() +
+  geom_rect(
+    data = x_group_bands,
+    aes(xmin = xmin, xmax = xmax, ymin = 0, ymax = 1, fill = fill),
+    inherit.aes = FALSE,
+    color = NA,
+    alpha = 1
+  ) +
+  geom_text(
+    data = x_group_bands,
+    aes(x = xmid, y = 0.5, label = x_group),
+    fontface = "bold",
+    size = 3.6,
+    lineheight = 0.95
+  ) +
+  scale_fill_identity() +
+  scale_x_continuous(limits = c(0.5, n_x + 0.5), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) +
+  theme_void() +
+  theme(plot.margin = margin(0, 0, 0, 0))
+
+# ============================================================
+# 15 Panel 7: x main title
+# ============================================================
+
+p_xtitle <- ggplot() +
+  geom_text(
+    aes(x = 0.5, y = 0.5, label = "Focus Condition"),
+    fontface = "bold",
+    size = 4.8
+  ) +
+  xlim(0, 1) +
+  ylim(0, 1) +
+  theme_void() +
+  theme(plot.margin = margin(6, 0, 0, 0))
+
+# ============================================================
+# 16 Build top row and bottom row separately
+# ============================================================
+
+top_row <- patchwork::wrap_plots(
+  p_title, p_group, p_ticks, p_bubble,
+  nrow = 1,
+  widths = c(0.60, 0.45, 1.55, 8.0)
+)
+
+p_blank1 <- ggplot() + theme_void() + theme(plot.margin = margin(0, 0, 0, 0))
+p_blank2 <- ggplot() + theme_void() + theme(plot.margin = margin(0, 0, 0, 0))
+p_blank3 <- ggplot() + theme_void() + theme(plot.margin = margin(0, 0, 0, 0))
+
+bottom_right <- patchwork::wrap_plots(
+  p_xticks,
+  p_xgroup,
+  p_xtitle,
+  ncol = 1,
+  heights = c(1.15, 0.55, 0.45)
+)
+
+bottom_row <- patchwork::wrap_plots(
+  p_blank1, p_blank2, p_blank3, bottom_right,
+  nrow = 1,
+  widths = c(0.60, 0.45, 1.55, 8.0)
+)
+
+# ============================================================
+# 17 Final combine
 # ============================================================
 
 final_plot <- patchwork::wrap_plots(
-  p_title, p_group, p_ticks, p_bubble,
-  nrow = 1,
-  widths = c(0.60, 0.45, 1.55, 8.0),
+  top_row,
+  bottom_row,
+  ncol = 1,
+  heights = c(8.0, 2.15),
   guides = "collect"
 ) & theme(
   plot.margin = margin(0, 0, 0, 0),
@@ -425,7 +608,7 @@ final_plot <- patchwork::wrap_plots(
 final_plot
 
 # ============================================================
-# 13 Save
+# 18 Save
 # ============================================================
 
 dir.create("figures", showWarnings = FALSE)
@@ -444,4 +627,3 @@ ggsave(
   width = 8,
   height = 15
 )
-
