@@ -22,7 +22,7 @@ invisible(lapply(required_packages, library, character.only = TRUE))
 # 1 Load dataset
 # ============================================================
 
-data <- read.csv("TableLiterature.csv", stringsAsFactors = FALSE, check.names = FALSE)
+data <- read.csv("Data/TableLiterature.csv", stringsAsFactors = FALSE, check.names = FALSE)
 data <- janitor::clean_names(data)
 
 # ============================================================
@@ -142,14 +142,8 @@ if (nrow(comfort_long) == 0) {
 # 5 Count combinations
 # ============================================================
 
-landscape_data <- landscape_data %>%
-  dplyr::filter(comfort_factor %in% display_levels) %>%
-  dplyr::mutate(
-    comfort_factor = factor(comfort_factor, levels = display_levels),
-    focus_condition = factor(focus_condition, levels = focus_levels),
-    focus_condition_wrapped = stringr::str_wrap(as.character(focus_condition), width = 14),
-    scenario = stringr::str_wrap(as.character(scenario), width = 16)
-  )
+landscape_data <- comfort_long %>%
+  dplyr::count(comfort_factor, factor_group, focus_condition, scenario, name = "n")
 
 # ============================================================
 # 6 Force order
@@ -217,8 +211,8 @@ shared_bands <- row_map %>%
   ) %>%
   dplyr::mutate(
     fill = dplyr::case_when(
-      group == "Vehicle-related" ~ "#CFEBC8",
-      group == "User-related" ~ "#F1D4D8"
+      group == "Vehicle-related" ~ "#E2F0D9",
+      group == "User-related" ~ "#FBE5D6"
     ),
     label = group
   )
@@ -266,7 +260,7 @@ p_group <- ggplot() +
     data = group_bands,
     aes(xmin = 0, xmax = 0.72, ymin = ymin, ymax = ymax, fill = fill),
     color = NA,
-    alpha = 0.35,
+    alpha = 1,
     inherit.aes = FALSE
   ) +
   geom_text(
@@ -297,7 +291,7 @@ p_ticks <- ggplot() +
     aes(xmin = 0, xmax = 1, ymin = ymin, ymax = ymax, fill = fill),
     inherit.aes = FALSE,
     color = NA,
-    alpha = 0.35
+    alpha = 1
   ) +
   scale_fill_identity() +
   ggtext::geom_richtext(
@@ -394,6 +388,7 @@ p_bubble <- ggplot(
     size = guide_legend(
       title.position = "left",
       title.hjust = 0,
+      title.vjust = 1,
       direction = "horizontal",
       nrow = 1,
       byrow = TRUE,
@@ -449,3 +444,4 @@ ggsave(
   width = 8,
   height = 15
 )
+
