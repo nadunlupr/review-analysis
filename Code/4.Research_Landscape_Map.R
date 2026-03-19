@@ -24,7 +24,7 @@ invisible(lapply(required_packages, library, character.only = TRUE))
 # 1 Load dataset
 # ============================================================
 
-data <- read.csv("Data/TableLiterature.csv")
+data <- read.csv("Data/TableLiterature.csv", stringsAsFactors = FALSE)
 data <- clean_names(data)
 
 # ============================================================
@@ -40,16 +40,50 @@ data$platform <- case_when(
 )
 
 # ============================================================
-# 3 Count study combinations
+# 3 Clean and expand scenario + measurements
+# ============================================================
+
+data$scenario <- as.character(data$scenario)
+data$measurements <- as.character(data$measurements)
+
+data <- data %>%
+  mutate(
+    scenario = scenario %>%
+      stringr::str_trim() %>%
+      stringr::str_replace_all("\\s*\\+\\s*", "+"),
+    measurements = measurements %>%
+      stringr::str_trim() %>%
+      stringr::str_replace_all("\\s*\\+\\s*", "+")
+  ) %>%
+  tidyr::separate_rows(scenario, sep = "\\+") %>%
+  tidyr::separate_rows(measurements, sep = "\\+") %>%
+  mutate(
+    scenario = case_when(
+      scenario == "NDRT" ~ "NDRT",
+      scenario == "Vigilance" ~ "Vigilance",
+      TRUE ~ scenario
+    ),
+    measurements = case_when(
+      str_to_lower(measurements) == "subjective" ~ "Subjective",
+      str_to_lower(measurements) == "objective" ~ "Objective",
+      TRUE ~ measurements
+    )
+  )
+
+# ============================================================
+# 4 Count study combinations
 # ============================================================
 
 landscape_data <- data %>%
-  filter(!is.na(scenario), !is.na(measurements), !is.na(platform)) %>%
+  filter(!is.na(scenario), scenario != "",
+         !is.na(measurements), measurements != "",
+         !is.na(platform), platform != "") %>%
   count(scenario, measurements, platform)
 
 # ============================================================
-# 4 Plot Research Landscape
+# 5 Plot Research Landscape
 # ============================================================
+
 landscape_plot <- ggplot(
   landscape_data %>%
     mutate(
@@ -125,19 +159,23 @@ landscape_plot <- ggplot(
     ),
     
     legend.position = "bottom",
-    legend.direction = "vertical",
+    legend.direction = "horizontal",
     legend.box = "vertical",
+    legend.box.just = "left",
+    legend.justification = "center",
     
     legend.title = element_text(
-      color = "black",
       face = "bold",
-      size = 14
+      color = "black"
     ),
     
     legend.text = element_text(
       color = "black",
       size = 12
     ),
+    
+    legend.key.height = unit(0.9, "lines"),
+    legend.key.width = unit(1.2, "lines"),
     
     panel.border = element_rect(
       color = "grey40",
@@ -150,39 +188,41 @@ landscape_plot <- ggplot(
   guides(
     size = guide_legend(
       title.position = "left",
-      title.hjust = 0.5,
+      title.hjust = 0,
+      title.vjust = 0.5,
+      direction = "horizontal",
       nrow = 1,
       byrow = TRUE,
       order = 1
     ),
     color = guide_legend(
       title.position = "left",
-      title.hjust = 0.5,
+      title.hjust = 0,
+      title.vjust = 1,
+      direction = "horizontal",
       nrow = 1,
       byrow = TRUE,
-      order = 2,
+      order = 2
     )
   )
 
 landscape_plot
 
-landscape_plot
-
 # ============================================================
-# 5 Save figure
+# 6 Save figure
 # ============================================================
 
 ggsave(
   "figures/research_landscape_map.png",
   landscape_plot,
   width = 8,
-  height = 10,
+  height =  10,
   dpi = 300
 )
 
 ggsave(
   "figures/research_landscape_map.pdf",
   landscape_plot,
-  width = 12,
-  height = 6
+  width = 8,
+  height = 10
 )

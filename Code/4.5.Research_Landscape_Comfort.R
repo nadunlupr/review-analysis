@@ -578,7 +578,7 @@ bottom_right <- patchwork::wrap_plots(
   p_xgroup,
   p_xtitle,
   ncol = 1,
-  heights = c(1.15, 0.55, 0.45)
+  heights = c(1.15, 0.25, 0.45)
 )
 
 bottom_row <- patchwork::wrap_plots(
@@ -614,7 +614,7 @@ final_plot
 dir.create("figures", showWarnings = FALSE)
 
 ggsave(
-  "figures/research_landscape_left_strips_fixed.png",
+  "figures/research_landscape_comfort.pdf.png",
   final_plot,
   width = 8,
   height = 15,
@@ -622,7 +622,7 @@ ggsave(
 )
 
 ggsave(
-  "figures/research_landscape_left_strips_fixed.pdf",
+  "figures/research_landscape_comfort.pdf.pdf",
   final_plot,
   width = 8,
   height = 15
