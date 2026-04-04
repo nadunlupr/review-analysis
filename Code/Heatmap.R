@@ -1,7 +1,8 @@
 # ============================================================
 # Faceted Count Matrix / Heatmap
-# Platform × (Driver Presence & Visibility × Motion DOF)
+# Platform × (Driver Presence & Visibility × Motion DoF)
 # Aggregated across ALL cabin structures
+# Automatic driver-presence levels from dataset
 # ============================================================
 
 library(readr)
@@ -51,19 +52,46 @@ get_text_color_from_fill <- function(fill_hex) {
   if (luminance > 0.5) "black" else "white"
 }
 
+clean_cabin_label <- function(x) {
+  case_when(
+    is.na(x) ~ NA_character_,
+    str_detect(x, regex("^\\s*no\\s+cabin\\s*$", ignore_case = TRUE)) ~ "No Cabin",
+    TRUE ~ str_trim(
+      str_squish(
+        str_remove_all(x, regex("\\bcabin\\b", ignore_case = TRUE))
+      )
+    )
+  )
+}
+
+clean_driver_label <- function(x) {
+  case_when(
+    is.na(x) ~ NA_character_,
+    str_detect(x, regex("^\\s*no\\s+driver\\s*$", ignore_case = TRUE)) ~ "No Driver",
+    TRUE ~ str_trim(
+      str_squish(
+        str_remove_all(x, regex("\\bdriver\\b", ignore_case = TRUE))
+      )
+    )
+  )
+}
+
 # ============================================================
 # 3 Clean
-#    Cabin Structure is NOT filtered and NOT grouped
-#    so counts are aggregated across all cabin structures
 # ============================================================
 
 df <- data %>%
   mutate(across(where(is.character), norm_str)) %>%
-  distinct(study, .keep_all = TRUE) %>%
+  distinct(reference, .keep_all = TRUE) %>%
   mutate(
-    motion_dof_num = suppressWarnings(as.integer(str_extract(motion_dof, "\\d+"))),
+    motion_dof_num = suppressWarnings(as.integer(str_extract(as.character(motion_dof), "\\d+"))),
     platform_clean = norm_str(platform),
-    driver_presence_clean = norm_str(driver_presence_visibility)
+    driver_presence_clean = norm_str(driver_presence_visibility),
+    cabin_structure_clean = norm_str(cabin_structure_visibility)
+  ) %>%
+  mutate(
+    driver_presence_clean = clean_driver_label(driver_presence_clean),
+    cabin_structure_clean = clean_cabin_label(cabin_structure_clean)
   ) %>%
   filter(
     !is.na(platform_clean),
@@ -71,18 +99,25 @@ df <- data %>%
     !is.na(driver_presence_clean)
   )
 
+# Optional checks
+print(sort(unique(df$platform_clean)))
+print(sort(unique(df$driver_presence_clean)))
+print(sort(unique(df$cabin_structure_clean)))
+print(sort(unique(df$motion_dof_num)))
+
 # ============================================================
 # 4 Count combinations
 #    Counts are summed across all cabin structures
 # ============================================================
 
-dof_levels <- c(0, 1, 4, 6)
+dof_levels <- c(0, 1, 2, 3, 6)
 
+# Automatically use whatever cleaned driver presence values exist
 driver_presence_levels <- c(
   "Present-Visible",
   "Participant Driving",
   "Present-Concealed",
-  "Not Present"
+  "No Driver"
 )
 
 driver_presence_label_levels <- rev(wrap_value(driver_presence_levels, width = 18))
@@ -113,10 +148,7 @@ counts <- df %>%
 
 max_n <- max(counts$n, na.rm = TRUE)
 
-# Use the same muted family, but not the blue used for platform
 heatmap_cols <- c("#E6F4F1", "#7FC8BE", "#2F7F77")
-
-
 fill_lookup <- grDevices::colorRampPalette(heatmap_cols)(max(max_n, 1) + 1)
 
 counts <- counts %>%
@@ -154,7 +186,7 @@ p <- ggplot(
   ) +
   labs(
     title = NULL,
-    x = "Motion DOF",
+    x = "Motion DoF",
     y = "Driver Presence & Visibility",
     fill = "Number of Studies"
   ) +
@@ -251,6 +283,8 @@ p
 # 6 Save
 # ============================================================
 
+dir.create("figures", showWarnings = FALSE)
+
 ggsave(
   "figures/platform_driver_presence_motion_dof_count_matrix.png",
   p,
@@ -266,4 +300,3 @@ ggsave(
   height = 5,
   dpi = 300
 )
-

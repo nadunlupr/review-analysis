@@ -1,0 +1,67 @@
+File,NO,Reference,Author/s,Year of Publication,Platform,Driving Mode,Cabin Structure & Visibility,Motion DOF,Display Technology,Participant Seating Position,Driver Presence & Visibility,Scenario,Controlled Sensory Focus,Comfort Factor,Comfort Factor - User,Comfort Factor - Vehicle,Measurement Domain,Focus Condition
+3.pdf,1,https://dl.acm.org/doi/10.1145/3640792.3675737,Nahin Ch et.al,2024,Simulator,Supervised Automation,No Cabin,0,2D Display,Driver's Seat,Participant Driving,NDRT + Vigilance,Visual,User,Task Desirability,None,Behavioural,Taking Over Control
+4.pdf,2,https://dl.acm.org/doi/10.1145/3640792.3676882,Evangelou et. al,2024,Simulator,Supervised Automation,Cabin Real-Visible,0,Projection,Driver's Seat,Participant Driving,Interaction,Haptic,User + Vehicle,Trust,Features Supporting Secondary Activities,Subjective,Sense of Agency
+5.pdf,3,https://dl.acm.org/doi/10.1145/3640792.3675728,Hogema et. al,2024,Simulator,Supervised Automation,No Cabin,0,2D Display,Driver's Seat,Participant Driving,Interaction,Visual,User + Vehicle,Trust,Unclear Actions,Subjective,Discomfort
+8.pdf,4,https://dl.acm.org/doi/10.1145/3640792.3675725,Stampf et. al,2024,Simulator,Fully Automated,Cabin Virtual-Visible,0,HMD-VR,Front Passenger Seat,Driver Present-Concealed,Interaction,Auditory,User + Vehicle,"Automated Driving Style Preferences +
+Perceived Safety +
+Trust",Level of Automation,Subjective,Communication
+9.pdf,5,https://doi.org/10.1145/3613904.3642300,Goodge et. al,2024,Simulator,Fully Automated,No Cabin,0,HMD-AR + 2D Display,Driver's Seat,No Driver,NDRT + Vigilance,Visual,User,Situational Awareness,None,Subjective,Attention
+10.pdf,6,https://doi.org/10.1038/s41598-022-17049-7,Palatinus et. al,2022,Real-world Driving,Supervised Automation,Cabin Real-Visible,6,No Display,Front Passenger Seat,Driver Present-Visible,Ride-along,Visual,User,"Trust + 
+Automated Driving Style Preferences",None,Physiology + Behavioural,Affectivity 
+11.pdf,7,https://doi.org/10.1038/s41598-024-81960-4,Palatinus et. al,2025,Real-world Driving,Supervised Automation,Cabin Real-Visible,6,No Display,Front Passenger Seat,Driver Present-Visible,Unexpected Road Event,Visual,User,"Trust + 
+Perceived Safety +
+Situational Awareness",None,Physiology + Behavioural,Anxiety
+12.pdf,8,https://doi.org/10.3389/fhumd.2021.669030,Hartwich et. al,2021,Simulator,Fully Automated,Cabin Real-Visible,0,Projection,Front Passenger Seat,No Driver,Ride-along,Visual,User,"Situational Awareness +
+Perceived Safety +
+Trust + 
+Automated Driving Style Preference",None,Subjective,Discomfort
+13.pdf,9,https://doi.org/10.3389/fpsyg.2022.1021656,Bellet et. al,2022,Simulator,Fully Automated,No Cabin,0,2D Display,Driver's Seat,No Driver,Unexpected Road Event,Visual,User,"Trust +
+Perceived Safety",None,Subjective,Decision Making
+14.pdf,10,https://doi.org/10.1145/3580585.3607160,Tomzig et. al,2023,Real-world Driving,Fully Automated,Cabin Real-Visible,6,No Display,Driver's Seat,No Driver,NDRT,Visual,User + Vehicle,"Task Complexity +
+Task Desirability",Features Supporting Secondary Activities,Subjective + Physiology + Behavioural,Motion Sickness
+15.pdf,11,https://doi.org/10.1016/j.trf.2024.06.002,Metzulat et. al,2024,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,No Display,Front Passenger Seat,Driver Present-Visible,NDRT,Visual + Auditory,User,"Task Complexity +
+Task Desirability +
+Visual Focus",None,Subjective + Behavioural,Motion Sickness
+16.pdf,12,https://doi.org/10.1080/00140139.2024.2372704,Wijlens et. al,2024,Simulator,Fully Automated,Cabin Real-Visible,6,Projection,Driver's Seat,No Driver,Ride-along,Visual,User,Situational Awareness,None,Subjective + Behavioural,Motion Sickness
+18.pdf,13,https://dl.acm.org/doi/10.1145/3544999.3552488,Pöhlmann et. al,2022,Simulator,Fully Automated,No Cabin,1,HMD-VR,Front Passenger Seat,Driver Present-Concealed,NDRT,Visual,User + Vehicle,"Visual Focus +
+Task Complexity","Features Supporting Secondary Activities +
+Nausea Reducing Features",Subjective + Behavioural,Motion Sickness
+20.pdf,14,https://doi.org/10.1109/ISMAR62088.2024.00118,Li et. al,2024,Real-world Driving,Wizard-of-Oz,Cabin Real-Not Visible,6,HMD-VR,Rear Passenger Seat,Driver Present-Concealed,NDRT,Visual + Haptic,User,Disposition to Nausea,None,Subjective + Physiology + Behavioural,Motion Sickness
+21.pdf,15,https://doi.org/10.1016/j.trf.2018.06.046,Karjanto et. al,2018,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,2D Display,Rear Passenger Seat,Driver Present-Concealed,NDRT,Visual,User + Vehicle,"Situational Awareness +
+Motion Sickness +
+Focus of Visual Attention","Features Supporting Secondary Activities +
+Situational Awareness Supporting Features",Subjective,Motion Sickness
+22.pdf,16,https://doi.org/10.1016/j.apergo.2020.103068,Kuiper et. al,2020,Simulator,Fully Automated,No Cabin,1,No Display,Front Passenger Seat,No Driver,Ride-along,Auditory,User + Vehicle,Situational Awareness,Nausea Reducing Features,Subjective,Motion Sickness
+23.pdf,17,https://doi.org/10.1007%2Fs00221-015-4209-9,Keshavarz et. al,2015,Simulator,Fully Automated,No Cabin,0,2D Display,Driver's Seat,No Driver,Ride-along,Olfactory,User + Vehicle,Disposition to Nausea,Nausea Reducing Features,Subjective,Motion Sickness
+24.pdf,18,https://doi.org/10.1145/3706599.3720076,Shin et. al,2025,Real-world Driving,Fully Automated,Cabin Real-Not Visible,6,HMD-VR,Rear Passenger Seat,Driver Present-Concealed,NDRT,Visual + Haptic,User + Vehicle,"Task Desirability + 
+Situational Awareness +
+Visual Focus",Nausea Reducing Features,Subjective,Motion Sickness
+25.pdf,19,https://doi.org/10.1145/3529190.3534788,Hwang et. al,2022,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,2D Display,Front Passenger Seat,Driver Present-Visible,NDRT,Visual,User,Visual Focus,None,Subjective,Motion Sickness
+26.pdf,20,http://dx.doi.org/10.1145/3313831.3376247,Dillen et. al,2020,Real-world Driving,Fully Automated,Cabin Real-Visible,6,2D Display,Front Passenger Seat,Driver Present-Visible,NDRT,Visual + Haptic,User + Vehicle,"Visual Focus + 
+Automated Driving Style Preferences",Driving style,Subjective + Physiological + Behavioural,Anxiety
+27.pdf,21,http://dx.doi.org/10.3390/ijerph17186821,Wang et.al,2020,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,No Display,Front Passenger Seat,Driver Present-Visible,NDRT,Visual + Haptic,User + Vehicle,"Perceived Safety + 
+Automated Driving Style Preference",Driving style,Subjective,Discomfort
+28.pdf,22,http://dx.doi.org/10.1016/j.trf.2016.05.005,Ballem et. al,2016,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,No Display,Driver's Seat,Participant Driving,Ride-along,Haptic,User + Vehicle,Automated Driving Style Preferences,Driving style,Subjective,Driving Style
+29.pdf,23,https://doi.org/10.1016/j.trf.2024.03.003,Meng et. al,2024,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,No Display,Front Passenger Seat,Driver Present-Visible,Ride-along,Haptic,User + Vehicle,Perceived Safety,Driving Style,Physiological + Behavioural,Discomfort
+30.pdf,24,https://dl.acm.org/doi/10.1145/3640792.3677723,Currano et. al,2024,Simulator,Fully Automated,No Cabin,0,HMD-VR,Driver's Seat,No Driver,Ride-along,Visual,User,Situational Awareness,None,Subjective + Physiological,Mind Wandering
+32,25,https://doi.org/10.1145/3491101.3519741,Togwell et. al,2022,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,HMD-AR,Rear Passenger Seat,Driver Present-Visible,NDRT,Visual,User,"Task Desirability + 
+Situational Awareness +
+Visual Focus",None,Subjective,Affectivity 
+33,26,https://doi.org/10.1145/3613904.3642941,Elsharkawy et. al,2024,Real-world Driving,Wizard-of-Oz,Cabin Real-Not Visible,6,HMD-VR,Front Passenger Seat,Driver Present-Concealed,NDRT,Visual + Haptic,User,Disposition to Nausea,None,Subjective + Physiological,Motion Sickness
+34,27,https://doi.org/10.1016/j.trf.2025.103381,Emond et. al,2026,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,2D Display,Front Passenger Seat,Driver Present-Visible,NDRT,Haptic,User + Vehicle,Disposition to Nausea,Nausea Reducing Features,Subjective + Physiological,Motion Sickness
+35,28,https://doi.org/10.3390/s22228616,Jakus et. al,2022,Simulator,Fully Automated,No Cabin,3,HMD-VR,Front Passenger Seat,No Driver,Ride-along,Visual,User,Disposition to Nausea,None,Physiological,Motion Sickness
+36,29,10.1109/TVT.2019.2933601,Morra et. al,2019,Simulator,Fully Automated,Cabin Virtual-Visible,2,HMD-VR,Front Passenger Seat,No Driver,Vigilance,Visual,User + Vehicle,Situation Awareness,Features Supporting Situation Awareness,Subjective + Physiological,Affectivity
+37,30,https://doi.org/10.1109/ISMAR59233.2023.00029,Akiyoshi et. al,2023,Real-world Driving,Fully Automated,Cabin Real-Not Visible,6,HMD-VR,Rear Passenger Seat,No Driver,NDRT,Visual,User + Vehicle,Task Desirability,Features Supporting Secondary Activities,Subjective,Affectivity + Anxiety + Motion Sickness
+38,31,https://dl.acm.org/doi/10.1145/3025453.3026046,McGill et. al,2017,Real-world Driving,Wizard-of-Oz,Cabin Real-Not Visible,6,HMD-VR,Front Passenger Seat,Driver Present-Concealed,Ride-along,Visual,User,Disposition to Nausea,None,Subjective,Motion Sickness
+39,32,https://doi.org/10.1016/j.trf.2018.02.036,Bellem et. al,2018,Simulator,Fully Automated,Cabin Real-Visible,6,Projection,Driver's Seat,No Driver,Ride-along,Visual,User + Vehicle,Automated Driving Style Preferences,Driving Style,Subjective,Motion Sickness
+40,33,https://doi.org/10.4271/2023-01-0788,Su et. al,2023,Simulator,Fully Automated,Cabin Virtual-Visible,0,2D Display,Driver's Seat,No Driver,Ride-along,Visual,User + Vehicle,Automated Driving Style Preferences,Driving Style,Subjective,Discomfort
+41,34,https://doi.org/10.1145/3613905.3650746,Gim et. al,2024,Real-world Driving,Wizard-of-Oz,Cabin Virtual-Visible,6,HMD-VR,Front Passenger Seat,Driver Present-Concealed,NDRT,Visual,User,"Visual Focus +
+Disposition to Nausea",None,Subjective,Motion Sickness
+42,35,https://doi.org/10.15187/adr.2019.08.32.3.5,Kim et. al,2019,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,2D Display,Front Passenger Seat,Driver Present-Concealed,NDRT,Visual,User,Situational Awareness,None,Subjective,Decision Making
+43,36,https://doi.org/10.36463/idw.2022.1004,Charissis,2022,Simulator,Supervised Automation,Cabin Real-Visible,0,Projection,Driver's Seat,Participant Driving,Ride-along,Visual,User + Vehicle,Situational Awareness,Features Supporting Situation Awareness,Subjective,Anxiety
+44,37,https://doi.org/10.3390/app13084952,Kim et. al,2023,Simulator,Fully Automated,Cabin Virtual-Visible,3,HMD-VR,Front Passenger Seat,No Driver,Ride-along,Visual,User + Vehicle,Situational Awareness,Features Supporting Situation Awareness,Subjective + Physiological,Affectivity
+45,38,https://dl.acm.org/doi/10.1145/3342197.3344545,Large et. al,2019,Real-world Driving,Fully Automated,Cabin Real-Visible,6,2D Display,Rear Passenger Seat,No Driver,NDRT,Auditory,User + Vehicle,Task Desirability,Unclear Actions,Subjective,Affectivity
+46,39,https://doi.org/10.1016/j.apergo.2020.103282,Winkel et. al,2021,Simulator,Fully Automated,Cabin Virtual-Visible,1,Projection,Front Passenger Seat,No Driver,Ride-along,Visual,User + Vehicle,"Visual Focus +
+Disposition to Nausea",Nausea Reducing Features,Subjective + Behavioural,Affectivity + Motion Sickness
+47,40,https://discovery.ucl.ac.uk/id/eprint/10212163/,Monsuur et. al,2024,Simulator,Fully Automated,Cabin Virtual-Visible,0,HMD-VR,Front Passenger Seat,No Driver,Ride-along,Visual,User + Vehicle,"Perceived safety +
+Trust",None,Subjective + Physiological,Affectivity + Anxiety

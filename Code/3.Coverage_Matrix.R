@@ -300,7 +300,7 @@ data_platform_display <- prepare_matrix_data(
 
 data_scenario_measurements <- prepare_matrix_data(
   data,
-  cols = c("scenario", "measurements"),
+  cols = c("scenario", "measurement_domain"),
   protected_map = protected_map
 )
 
@@ -312,7 +312,7 @@ data_platform_measurement <- prepare_matrix_data(
 
 data_seating_cabin <- prepare_matrix_data(
   data,
-  cols = c("participant_seating_position", "cabin_visibility"),
+  cols = c("participant_seating_position", "cabin_structure_visibility"),
   protected_map = protected_map
 )
 
@@ -342,18 +342,18 @@ plot_platform_display <- make_heatmap(
   tile_text_size = 6,
   legend_barheight = 0.45,
   panel_height = common_panel_height,
-  x_title_gap = 21,
+  x_title_gap = 12.6,
   legend_top_gap = common_legend_top_gap,
   bottom_plot_margin = common_bottom_plot_margin
 )
 
 plot_scenario_measurement <- make_heatmap(
   df = data_scenario_measurements,
-  x_var = "measurements",
+  x_var = "measurement_domain",
   y_var = "scenario",
   fill_title = "Number of Studies",
   gradient_cols = heatmap_gradients$scenario_measurements,
-  x_label = "Measurement Type",
+  x_label = "Measurement Domain",
   y_label = "Scenario",
   x_wrap = 12,
   y_wrap = 12,
@@ -385,18 +385,18 @@ plot_platform_measurement <- make_heatmap(
 
 plot_seating_position_cabin_visibility <- make_heatmap(
   df = data_seating_cabin,
-  x_var = "cabin_visibility",
+  x_var = "cabin_structure_visibility",
   y_var = "participant_seating_position",
   fill_title = "Number of Studies",
   gradient_cols = heatmap_gradients$seating_cabin,
-  x_label = "Cabin Visibility",
+  x_label = "Cabin Structure Visibility",
   y_label = "Participant Seating Position",
   x_wrap = 10,
   y_wrap = 12,
   tile_text_size = 6,
   legend_barheight = 0.45,
   panel_height = common_panel_height,
-  x_title_gap = 48,
+  x_title_gap = 22,
   legend_top_gap = common_legend_top_gap,
   bottom_plot_margin = common_bottom_plot_margin
 )
@@ -440,31 +440,31 @@ ggsave(
   "figures/platform_display_coverage.png",
   plot_platform_display,
   width = 7,
-  height = 9.5,
-  dpi = 300
+  height = 9.4,
+  dpi = 600
 )
 
 ggsave(
   "figures/scenario_measurements_coverage.png",
   plot_scenario_measurement,
   width = 7,
-  height = 9.5,
-  dpi = 300
+  height = 9.4,
+  dpi = 600
 )
 
 ggsave(
   "figures/platform_measurement_domain_coverage.png",
   plot_platform_measurement,
   width = 7,
-  height = 9.5,
-  dpi = 300
+  height = 9.4,
+  dpi = 600
 )
 
 ggsave(
   "figures/seating_position_cabin_visibility_coverage.png",
   plot_seating_position_cabin_visibility,
   width = 7,
-  height = 9.5,
-  dpi = 300
+  height = 9.4,
+  dpi = 600
 )
 

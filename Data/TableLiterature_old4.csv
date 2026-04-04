@@ -1,0 +1,164 @@
+Study,Year of Publication,File,Platform,Driving Mode,Cabin Structure,Cabin Visibility,Motion DOF,Display,Focus Group,Participant Seating Position,Scenario,Controlled Sensory Focus,Driver Presence & Visibility,Comfort Factor,Comfort Factor - User,Comfort Factor - Vehicle,Measurements,Subjective (Standard Questionnaires) ,Subjective (Researcher Defined Questionnaires),Objective,Measurement Domain,Focus Condition
+https://dl.acm.org/doi/10.1145/3640792.3677723,2024,2.pdf,Simulator,Fully Automated,None,Not Visible,0,HMD-VR,Driver,Driver's Seat,Ride-along,Visual,Participant Driving,User,Situational Awareness,None,"Subjective + 
+Objective",,-State of Mind,"- Blood Volume Pulse
+- Blood Volume Acceleration
+- EDA
+- Temperature
+- EEG
+- Eye Tracking
+- Head Movement
+- Hear rate","Self-report + 
+Physiology",Mind Wandering
+https://dl.acm.org/doi/10.1145/3640792.3675737,2024,3.pdf,Simulator,Supervised Automation,None,Not Visible,0,2D Display,Driver,Driver's Seat,NDRT + Vigilance,Visual,Participant Driving,User,Task Desirability,None,Objective,,,"- Gaze
+- System Logs (Time)",Physiology,Taking Over Control
+https://dl.acm.org/doi/10.1145/3640792.3676882,2024,4.pdf,Simulator,Supervised Automation,Real,Visible,0,Projection,Driver,Driver's Seat,Interaction,Haptic,Participant Driving,"User +
+Vehicle",Trust,Features Supporting Secondary Activities,Subjective,"- CARS
+- TRI 2.0
+- UEQ-S",-Trust,,Self-report,Sense of Agency
+https://dl.acm.org/doi/10.1145/3640792.3675728,2024,5.pdf,Simulator,Supervised Automation,None,Not Visible,0,2D Display,Passenger,Driver's Seat,Interaction,Visual,Participant Driving,"User +
+Vehicle",Trust,Unclear Actions,Subjective,- Product Reaction Card,-Clear and Unambiguous,,Self-report,Discomfort
+https://dl.acm.org/doi/10.1145/3640792.3675723,2024,7.pdf,Simulator,Fully Automated,None,Not Visible,0,2D Display,Pedestrian,NA,Vigilance,Visual,Present-Concealed,"User +
+Vehicle","Perceived Safety +
+Trust",Features Supporting Secondary Activities,Subjective,-UEQ- S,,IO Device (Decision Making),"Self-report + 
+Behavior",Decision Making
+https://dl.acm.org/doi/10.1145/3640792.3675725,2024,8.pdf,Simulator,Fully Automated,Virtual,Visible,0,HMD-VR,Passenger,Front Passenger Seat,Interaction,Auditory,Present-Concealed,"User +
+Vehicle","Automated Driving Style Preferences +
+Perceived Safety +
+Trust",Level of Automation,Subjective,"- Perceived Control
+- HMII
+- STS-AD
+- NASA-TLX",,,Self-report,Communication
+https://doi.org/10.1145/3613904.3642300,2024,9.pdf,Simulator,Fully Automated,None,Not Visible,0,"HMD-AR + 
+2D Display",Driver,Driver's Seat,NDRT + Vigilance,Visual,Participant Driving,User,Situational Awareness,None,Subjective,- NASA-TLX,"- What-happens-next (WHN)
+- Confidence Rating
+- Attention Rating",,Self-report,Attention
+https://doi.org/10.1038/s41598-022-17049-7,2022,10.pdf,Real-world Driving,Supervised Automation,Real,Visible,6,None,Passenger,Front Passenger Seat,Ride-along,Visual,Present-Visible,User,"Trust + 
+Automated Driving Style Preferences",None,Objective,,,"- Eye Tracking
+- EEG",Physiology,Affectivity 
+http://dx.doi.org/10.21203/rs.3.rs-3462278/v1,2023,11.pdf,Real-world Driving,Supervised Automation,Real,Visible,6,None,Passenger,Front Passenger Seat,Unexpected Road Event,Visual,Present-Visible,User,"Trust + 
+Perceived Safety +
+Situational Awareness",None,Objective,,,"- Eye Tracking 
+- EEG 
+- Head Movement",Physiology,Anxiety
+https://doi.org/10.3389/fhumd.2021.669030,2021,12.pdf,Simulator,Fully Automated,Real,Visible,0,Projection,Passenger,Front Passenger Seat,Ride-along,Visual,Not Present,User,"Situational Awareness +
+Perceived Safety +
+Trust + 
+Automated Driving Style Preference",None,Subjective,"- Trust in Automation questionnaire (TiA)
+- UEQ",-Trust,- IO Device (Discomfort),Self-report,Discomfort
+https://doi.org/10.3389/fpsyg.2022.1021656,2022,13.pdf,Simulator,Fully Automated,None,Not Visible,0,2D Display,Passenger,Driver's Seat,Unexpected Road Event,Visual,Participant Driving,User,"Trust +
+Perceived Safety",None,Subjective,,"- AV Safety
+- AV Acceptance",,Self-report,Decision Making
+https://doi.org/10.1145/3580585.3607160,2023,14.pdf,Real-world Driving,Fully Automated,Real,Visible,6,None,Passenger,Driver's Seat,NDRT,Visual,Participant Driving,"User +
+Vehicle","Task Complexity +
+Task Desirability",Features Supporting Secondary Activities,"Subjective + 
+Objective","- MSAQ
+- MSTT",,"- Body Movement Tracking
+- Eye Tracking
+- Heart Rate
+- Body Temperature
+- GPS
+- Accelerometer","Self-report + 
+Physiology",Motion Sickness
+https://doi.org/10.1016/j.trf.2024.06.002,2024,15.pdf,Real-world Driving,Wizard-of-Oz,Real,Visible,6,None,Passenger,Front Passenger Seat,NDRT,"Visual + 
+Auditory",Present-Visible,User,"Task Complexity +
+Task Desirability +
+Visual Focus",None,"Subjective + 
+Objective","- MSAQ
+- MISC
+- NASA TLX",,- System Log (Time),"Self-report + 
+Behavior",Motion Sickness
+https://doi.org/10.1080/00140139.2024.2372704,2024,16.pdf,Simulator,Fully Automated,Real,Visible,6,Projection,Passenger,Driver's Seat,Ride-along,Haptic,Participant Driving,User,Situational Awareness,None,"Subjective + 
+Objective","- MISC
+- MSSQ","- Perceived Predictability of the Simulator Motion
+- Motion Comfort",- Head Movement,"Self-report + 
+Behavior",Motion Sickness
+https://doi.org/10.1145/3580585.3606460,2023,17.pdf,Real-world Driving,Wizard-of-Oz,Real,Visible,6,HMD-AR,Pedestrian,NA,Interaction,Visual,Present-Concealed,"User +
+Vehicle","Trust + 
+Perceived Safety",Unclear Actions,"Subjective + 
+Objective","- Perceived Safety
+- NASA TLX",,- System Log (Time),"Self-report + 
+Behavior",Communication
+https://dl.acm.org/doi/10.1145/3544999.3552488,2022,18.pdf,Simulator,Fully Automated,None,Not Visible,1,HMD-VR,Passenger,Front Passenger Seat,NDRT,Visual,Present-Concealed,"User +
+Vehicle","Visual Focus +
+Task Complexity","Features Supporting Secondary Activities +
+Nausea Reducing Features","Subjective + 
+Objective","- SSQ
+- NASA TLX
+- MISC",,- Reading Speed,"Self-report + 
+Behavior",Motion Sickness
+https://doi.org/10.1109/ISMAR62088.2024.00118,2024,20.pdf,Real-world Driving,Wizard-of-Oz,Real,Not Visible,6,HMD-VR,Passenger,Rear Passenger Seat,NDRT,"Visual + 
+Haptic",Present-Concealed,User,Disposition to Nausea,None,"Subjective + 
+Objective",,- Video Related,"- Eye Tracking
+- Lower Facial Action Images","Self-report + 
+Physiology + 
+Behavior",Motion Sickness
+https://doi.org/10.1016/j.trf.2018.06.046,2018,21.pdf,Real-world Driving,Wizard-of-Oz,Real,Visible,6,2D Display,Passenger,Rear Passenger Seat,NDRT,Visual,Present-Concealed,"User +
+Vehicle","Situational Awareness +
+Motion Sickness +
+Focus of Visual Attention","Features Supporting Secondary Activities +
+Situational Awareness Supporting Features","Subjective + 
+Objective","- MSSQ
+- ADTQ
+- MSAQ
+- SART
+- RSME
+- UEQ",,- IO Device (Perceived Rotation),Self-report,Motion Sickness
+https://doi.org/10.1016/j.apergo.2020.103068,2020,22.pdf,Simulator,Fully Automated,None,Not Visible,1,None,Passenger,Front Passenger Seat,Ride-along,Auditory,Not Present,"User +
+Vehicle",Situational Awareness,Nausea Reducing Features,Subjective,"- MSSQ
+- MISC",,,Self-report,Motion Sickness
+https://doi.org/10.1007%2Fs00221-015-4209-9,2015,23.pdf,Simulator,Fully Automated,None,Not Visible,0,2D Dsiplay,Passenger,Driver's seat,Ride-along,Olfactory,Participant Driving,"User +
+Vehicle",Disposition to Nausea,Nausea Reducing Features,Subjective,"- FMSC
+- MSQ
+- COSS
+- IO",,,Self-report,Motion Sickness
+https://doi.org/10.1145/3706599.3720076,2025,24.pdf,Real-world Driving,Fully Automated,Real,Not Visible,6,HMD-VR,Passenger,Rear Passenger Seat,NDRT,"Visual + 
+Haptic",Present-Concealed,"User +
+Vehicle","Task Desirability + 
+Situational Awareness +
+Visual Focus",Nausea Reducing Features,Subjective,"- SSQ
+- SM
+- Presence Questionnaire",- Level of Comfort,,Self-report,Motion Sickness
+https://doi.org/10.1145/3529190.3534788,2022,25.pdf,Real-world Driving,Wizard-of-Oz,Real,Visible,6,2D Display,Passenger,Front Passenger Seat,NDRT,Visual,Present-Visible,User,Visual Focus,None,"Subjective + 
+Objective",,,,"Self-report +
+Behavior",Motion Sickness
+http://dx.doi.org/10.1145/3313831.3376247,2020,26.pdf,Real-world Driving,Fully Automated,Real,Visible,6,2D Display,Passenger,Front Passenger Seat,NDRT,"Visual + 
+Haptic",Present-Visible,"User +
+Vehicle","Visual Focus + 
+Automated Driving Style Preferences",Driving style,"Subjective + 
+Objective",- CSAI-2,- Comfort and Anxiety,"- GSR 
+- Heart Rate 
+- Eye Tracking
+- Accelerometer
+- LIDAR","Self-report + 
+Physiology",Anxiety
+http://dx.doi.org/10.3390/ijerph17186821,2020,27.pdf,Real-world Driving,Wizard-of-Oz,Real,Visible,6,None,Passenger,Front Passenger Seat,NDRT,"Visual + 
+Haptic",Present-Visible,"User +
+Vehicle","Perceived Safety + 
+Automated Driving Style Preference",Driving style,"Subjective + 
+Objective",- MSSQ,,- IO Device (Perceived Comfort),Self-report,Discomfort
+http://dx.doi.org/10.1016/j.trf.2016.05.005,2016,28.pdf,Real-world Driving,Wizard-of-Oz,Real,Visible,6,None,Driver,Driver's seat,Ride-along,Haptic,Participant Driving,"User +
+Vehicle",Automated Driving Style Preferences,Driving style,"Subjective + 
+Objective",,- Driving Style Confidence Rating,- OBD Data,Self-report,Driving Style
+https://doi.org/10.1109/ROMAN.2016.7745210,2018,31.pdf,Real-world Driving,Wizard-of-Oz,Real,Visible,6,None,Pedestrian,NA,Interaction,Visual,Present-Concealed,User,Perceived Safety,None,"Subjective + 
+Objective",,- Mock Driverless Car Perception,- Video Recording,"Self-report + 
+Behavior",Decision Making
+https://doi.org/10.1016/j.trf.2024.03.003,2024,29.pdf,Real-world Driving,Wizard-of-Oz,Real,Visible,6,None,Passenger,Front Passenger Seat,Ride-along,Haptic,Present-Visible,"User +
+Vehicle",Perceived Safety,Driving Style,Objective,,,"- GSR 
+- Heart Rate
+- Eye Tracking",Physiology,Discomfort
+https://doi.org/10.1145/3491101.3519741,2022,32,Real-world Driving,Wizard-of-Oz,Real,Visible,6,HMD-AR,Passenger,Rear Passenger Seat,NDRT,Visual,Present-Visible,User,"Task Desirability + 
+Situational Awareness +
+Visual Focus",None,Subjective,,- Think Aloud,,Self-report,Affectivity 
+https://doi.org/10.1145/3613904.3642941,2024,33,Real-world Driving,Wizard-of-Oz,Real,Not Visible,6,HMD-VR,Passenger,Front Passenger Seat,NDRT,Visual + Haptic,Present-Concealed,User,Disposition to Nausea,None,"Subjective + 
+Objective","- IPQ
+- NASA TLX
+- SSQ
+",- Condition preferrence ranking,"- EDA
+- Heart Rate","Self-report + 
+Physiology",Motion Sickness
+https://doi.org/10.1016/j.trf.2025.103381,2026,34,Real-world Driving,Wizard-of-Oz,Real,Visible,6,2D Display,Passenger,Front Passenger Seat,NDRT,Haptic,Present-Visible,"User +
+Vehicle",Disposition to Nausea,Nausea Reducing Features,"Subjective + 
+Objective","- MSSQ
+- FMS",,- Heart Rate,"Self-report +
+Physiology",Motion Sickness
+https://doi.org/10.3390/s22228616,2022,35,Simulator,Fully Automated,None,Not Visible,4,HMD-VR,Passenger,Front Passenger Seat,Ride-along,Visual,Not Present,User,Disposition to Nausea,,Objective,,,- EGG,Physiology,Motion Sickness

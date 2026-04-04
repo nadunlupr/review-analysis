@@ -22,7 +22,7 @@ invisible(lapply(required_packages, library, character.only = TRUE))
 # 1 Load dataset
 # ============================================================
 
-data <- read.csv("Data/TableLiterature.csv", stringsAsFactors = FALSE, check.names = FALSE)
+data <- read.csv("Data/TableLiterature_Comfort.csv", stringsAsFactors = FALSE, check.names = FALSE)
 data <- janitor::clean_names(data)
 
 # ============================================================
@@ -124,7 +124,9 @@ split_expand <- function(df, factor_col, factor_group) {
       comfort_raw = all_of(factor_col)
     ) %>%
     dplyr::mutate(
-      focus_condition = normalize_focus(focus_condition),
+      focus_condition = focus_condition %>%
+        clean_text() %>%
+        stringr::str_replace_all("\\s*\\+\\s*", "+"),
       scenario = scenario %>%
         clean_text() %>%
         stringr::str_replace_all("\\s*\\+\\s*", "+"),
@@ -132,7 +134,9 @@ split_expand <- function(df, factor_col, factor_group) {
     ) %>%
     tidyr::separate_rows(comfort_raw, sep = "\\+") %>%
     tidyr::separate_rows(scenario, sep = "\\+") %>%
+    tidyr::separate_rows(focus_condition, sep = "\\+") %>%
     dplyr::mutate(
+      focus_condition = normalize_focus(focus_condition),
       comfort_raw = stringr::str_trim(comfort_raw),
       scenario = stringr::str_trim(scenario),
       comfort_factor = normalize_factor(comfort_raw),
@@ -614,7 +618,7 @@ final_plot
 dir.create("figures", showWarnings = FALSE)
 
 ggsave(
-  "figures/research_landscape_comfort.pdf.png",
+  "figures/research_landscape_comfort.png",
   final_plot,
   width = 8,
   height = 15,
@@ -622,7 +626,7 @@ ggsave(
 )
 
 ggsave(
-  "figures/research_landscape_comfort.pdf.pdf",
+  "figures/research_landscape_comfort.pdf",
   final_plot,
   width = 8,
   height = 15

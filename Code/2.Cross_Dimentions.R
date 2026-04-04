@@ -25,13 +25,11 @@ vars <- c(
   "driving_mode",
   "display",
   "scenario",
-  "measurements",
+  "measurement_domain",
   "controlled_sensory_focus",
-  "focus_group",
   "participant_seating_position",
   "driver_presence_visibility",
-  "cabin_structure",
-  "cabin_visibility",
+  "cabin_structure_visibility",
   "motion_dof",
   "comfort_factor",
   "focus_condition"
@@ -47,7 +45,7 @@ dir.create("figures_cross", showWarnings = FALSE)
 # 4 Variables where "+" means combined categories
 # ======================================
 
-split_plus_vars <- c("display", "scenario")
+split_plus_vars <- c("display", "scenario", "measurement_domain")
 
 # ======================================
 # 5 Professional variable-family color system
@@ -69,13 +67,11 @@ variable_family <- c(
   driving_mode = "tech",
   display = "immersive",
   scenario = "context",
-  measurements = "attention",
+  measurement_domain = "attention",
   controlled_sensory_focus = "attention",
-  focus_group = "human",
   participant_seating_position = "human",
   driver_presence_visibility = "human",
-  cabin_structure = "structure",
-  cabin_visibility = "structure",
+  cabin_structure_visibility = "structure",
   motion_dof = "motion",
   comfort_factor = "human",
   focus_condition = "attention"
@@ -197,14 +193,14 @@ plot_cross_dimension <- function(var1, var2) {
       panel.grid.major.x = element_line(color = "grey85", linewidth = 0.4),
       axis.text.x = element_text(
         color = "black",
-        size = 14,
+        size = 16,
         hjust = 0.5,
         vjust = 0.5,
         margin = margin(t = 2)
       ),
       axis.text.y = element_text(
         color = "black",
-        size = 14,
+        size = 16,
         hjust = 0,
         vjust = 0.5,
         margin = margin(r = -2)
@@ -212,14 +208,14 @@ plot_cross_dimension <- function(var1, var2) {
       axis.title.x = element_text(
         color = "black",
         face = "bold",
-        size = 16,
+        size = 18,
         hjust = 0.5,
         margin = margin(t = 12)
       ),
       axis.title.y = element_text(
         color = "black",
         face = "bold",
-        size = 16,
+        size = 18,
         hjust = 0.5,
         margin = margin(r = 12)
       ),
@@ -308,7 +304,7 @@ plot_cross_dimension_precent <- function(var1, var2, vertical_padding = NULL) {
     labs(
       x = "Percentage of Studies",
       y = pretty_var_name(var1),
-      fill = pretty_var_name(var2)
+      fill = ifelse(var2 == "measurement_domain", "Measurement", pretty_var_name(var2))
     ) +
     theme_minimal(base_size = 16) +
     theme(
@@ -401,8 +397,8 @@ plot_cross_dimension_precent <- function(var1, var2, vertical_padding = NULL) {
 
 plot_cross_dimension("platform", "driving_mode")
 plot_cross_dimension_precent("platform", "display", vertical_padding = 0.8)
-plot_cross_dimension_precent("scenario", "measurements")
-plot_cross_dimension_precent("driver_presence_visibility", "measurements")
+plot_cross_dimension_precent("scenario", "measurement_domain")
+plot_cross_dimension_precent("driver_presence_visibility", "measurement_domain")
 
 # ======================================
 # 11 Generate ALL cross-dimension count plots
@@ -473,7 +469,7 @@ ggsave(
   plot_cross_dimension_precent("platform", "display", vertical_padding = 0.8),
   width = 7,
   height = 5.458,
-  dpi = 300
+  dpi = 600
 )
 
 ggsave(
@@ -488,15 +484,15 @@ ggsave(
 
 ggsave(
   "figures_cross/Scenario_V_Measurements.png",
-  plot_cross_dimension_precent("scenario", "measurements"),
+  plot_cross_dimension_precent("scenario", "measurement_domain"),
   width = 7,
   height = 5,
-  dpi = 300
+  dpi = 600
 )
 
 ggsave(
   "figures_cross/Scenario_V_Measurements.pdf",
-  plot_cross_dimension_precent("scenario", "measurements"),
+  plot_cross_dimension_precent("scenario", "measurement_domain"),
   width = 7,
   height = 5,
   dpi = 600
@@ -506,15 +502,15 @@ ggsave(
 
 ggsave(
   "figures_cross/Driver_Presence_V_Measurements.png",
-  plot_cross_dimension_precent("driver_presence_visibility", "measurements"),
+  plot_cross_dimension_precent("driver_presence_visibility", "measurement_domain"),
   width = 7,
   height = 5,
-  dpi = 300
+  dpi = 600
 )
 
 ggsave(
   "figures_cross/driver_presence_v_measurements.pdf",
-  plot_cross_dimension_precent("driver_presence_visibility", "measurements"),
+  plot_cross_dimension_precent("driver_presence_visibility", "measurement_domain"),
   width = 7,
   height = 5,
   dpi = 600
