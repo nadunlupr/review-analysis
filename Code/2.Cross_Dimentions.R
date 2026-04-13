@@ -23,7 +23,7 @@ glimpse(data)
 vars <- c(
   "platform",
   "driving_mode",
-  "display",
+  "display_technology",
   "scenario",
   "measurement_domain",
   "controlled_sensory_focus",
@@ -45,7 +45,7 @@ dir.create("figures_cross", showWarnings = FALSE)
 # 4 Variables where "+" means combined categories
 # ======================================
 
-split_plus_vars <- c("display", "scenario", "measurement_domain")
+split_plus_vars <- c("display_technology", "scenario", "measurement_domain", "focus_condition")
 
 # ======================================
 # 5 Professional variable-family color system
@@ -65,7 +65,7 @@ family_gradients <- list(
 variable_family <- c(
   platform = "tech",
   driving_mode = "tech",
-  display = "immersive",
+  display_technology = "immersive",
   scenario = "context",
   measurement_domain = "attention",
   controlled_sensory_focus = "attention",
@@ -117,6 +117,25 @@ get_text_color <- function(hex_color) {
 }
 
 # ======================================
+# 6 Focus condition grouping helper
+# ======================================
+
+group_focus_condition <- function(x) {
+  x_clean <- x %>%
+    as.character() %>%
+    stringr::str_trim() %>%
+    stringr::str_to_lower()
+  
+  dplyr::case_when(
+    x_clean %in% c("anxiety", "affectivity", "discomfort") ~ "Affective",
+    x_clean %in% c("motion sickness") ~ "Physiology",
+    x_clean %in% c("attention", "decision making", "mind wandering", "mind wondering") ~ "Cognitive",
+    x_clean %in% c("communication", "sense of agency", "taking over control", "driving style") ~ "Interaction/Performance",
+    TRUE ~ NA_character_
+  )
+}
+
+# ======================================
 # 7 Helper: prepare cross-dimension data
 # ======================================
 
@@ -143,104 +162,20 @@ prepare_cross_data <- function(var1, var2) {
       mutate(!!var2 := str_trim(.data[[var2]]))
   }
   
+  # Apply grouping to focus_condition after splitting
+  if (var1 == "focus_condition") {
+    df <- df %>%
+      mutate(focus_condition = group_focus_condition(focus_condition)) %>%
+      filter(!is.na(focus_condition))
+  }
+  
+  if (var2 == "focus_condition") {
+    df <- df %>%
+      mutate(focus_condition = group_focus_condition(focus_condition)) %>%
+      filter(!is.na(focus_condition))
+  }
+  
   df
-}
-
-# ======================================
-# 8 Cross-dimension count plot
-# ======================================
-
-plot_cross_dimension <- function(var1, var2) {
-  
-  df <- prepare_cross_data(var1, var2)
-  
-  fill_levels <- df %>%
-    distinct(.data[[var2]]) %>%
-    pull(1) %>%
-    as.character() %>%
-    sort()
-  
-  fill_palette <- get_variable_palette(var2, length(fill_levels))
-  names(fill_palette) <- fill_levels
-  
-  plot_df <- df %>%
-    mutate(
-      x_label = pretty_value(.data[[var1]], width = 12)
-    )
-  
-  p <- ggplot(
-    plot_df,
-    aes(
-      x = x_label,
-      fill = .data[[var2]]
-    )
-  ) +
-    geom_bar(position = "stack", color = NA) +
-    coord_flip() +
-    scale_fill_manual(
-      values = fill_palette,
-      labels = pretty_value(fill_levels, width = 12)
-    ) +
-    labs(
-      x = pretty_var_name(var1),
-      y = "Number of Reviewed Studies",
-      fill = pretty_var_name(var2)
-    ) +
-    theme_minimal(base_size = 16) +
-    theme(
-      panel.grid.minor = element_blank(),
-      panel.grid.major.y = element_blank(),
-      panel.grid.major.x = element_line(color = "grey85", linewidth = 0.4),
-      axis.text.x = element_text(
-        color = "black",
-        size = 16,
-        hjust = 0.5,
-        vjust = 0.5,
-        margin = margin(t = 2)
-      ),
-      axis.text.y = element_text(
-        color = "black",
-        size = 16,
-        hjust = 0,
-        vjust = 0.5,
-        margin = margin(r = -2)
-      ),
-      axis.title.x = element_text(
-        color = "black",
-        face = "bold",
-        size = 18,
-        hjust = 0.5,
-        margin = margin(t = 12)
-      ),
-      axis.title.y = element_text(
-        color = "black",
-        face = "bold",
-        size = 18,
-        hjust = 0.5,
-        margin = margin(r = 12)
-      ),
-      legend.position = "bottom",
-      legend.direction = "horizontal",
-      legend.title = element_text(
-        color = "black",
-        face = "bold",
-        size = 14,
-        vjust = 1
-      ),
-      legend.text = element_text(
-        color = "black",
-        size = 12
-      ),
-      panel.border = element_rect(
-        color = "grey40",
-        fill = NA,
-        linewidth = 0.8
-      ),
-      plot.margin = margin(t = 10, r = 20, b = 10, l = 10)
-    ) +
-    guides(fill = guide_legend(ncol = 3, byrow = TRUE))
-  
-  return(p)
 }
 
 # ======================================
@@ -267,13 +202,13 @@ plot_cross_dimension_precent <- function(var1, var2, vertical_padding = NULL) {
     mutate(percent = n / sum(n)) %>%
     ungroup() %>%
     mutate(
-      y_label = pretty_value(.data[[var1]], width = 12),
+      y_label = pretty_value(.data[[var1]], width = 20),
       fill_hex = fill_palette[as.character(.data[[var2]])],
       text_color = vapply(fill_hex, get_text_color, character(1))
     )
+  
   legend_ncol <- 3
   legend_nrow <- ceiling(length(fill_levels) / legend_ncol)
-  
   title_vjust_value <- if (legend_nrow > 1) 0.87 else 0.56
   
   p <- ggplot(
@@ -380,7 +315,6 @@ plot_cross_dimension_precent <- function(var1, var2, vertical_padding = NULL) {
       )
     )
   
-  
   if (!is.null(vertical_padding)) {
     p <- p + scale_y_discrete(
       drop = FALSE,
@@ -395,78 +329,18 @@ plot_cross_dimension_precent <- function(var1, var2, vertical_padding = NULL) {
 # 10 Example plots in R viewer
 # ======================================
 
-plot_cross_dimension("platform", "driving_mode")
-plot_cross_dimension_precent("platform", "display", vertical_padding = 0.8)
+plot_cross_dimension_precent("platform", "display_technology", vertical_padding = 0.8)
 plot_cross_dimension_precent("scenario", "measurement_domain")
 plot_cross_dimension_precent("driver_presence_visibility", "measurement_domain")
-
-# ======================================
-# 11 Generate ALL cross-dimension count plots
-# ======================================
-
-for (i in seq_along(vars)) {
-  for (j in seq_along(vars)) {
-    if (i < j) {
-      var1 <- vars[i]
-      var2 <- vars[j]
-      
-      p <- plot_cross_dimension(var1, var2)
-      
-      ggsave(
-        filename = paste0(
-          "figures_cross/",
-          "cross_count_",
-          var1,
-          "_vs_",
-          var2,
-          ".pdf"
-        ),
-        plot = p,
-        width = 7,
-        height = 5
-      )
-    }
-  }
-}
-
-# ======================================
-# 12 Generate ALL cross-dimension percentage plots
-# ======================================
-
-for (i in seq_along(vars)) {
-  for (j in seq_along(vars)) {
-    if (i < j) {
-      var1 <- vars[i]
-      var2 <- vars[j]
-      
-      p <- plot_cross_dimension_precent(var1, var2)
-      
-      ggsave(
-        filename = paste0(
-          "figures_cross/",
-          "cross_percent_",
-          var1,
-          "_vs_",
-          var2,
-          ".pdf"
-        ),
-        plot = p,
-        width = 7,
-        height = 5
-      )
-    }
-  }
-}
+plot_cross_dimension_precent("focus_condition", "scenario")
 
 # ======================================
 # 13 Selected exports
-#    Only Platform_V_Display gets extra
-#    internal vertical space
 # ======================================
 
 ggsave(
   "figures_cross/Platform_V_Display.png",
-  plot_cross_dimension_precent("platform", "display", vertical_padding = 0.8),
+  plot_cross_dimension_precent("platform", "display_technology", vertical_padding = 0.8),
   width = 7,
   height = 5.458,
   dpi = 600
@@ -474,13 +348,11 @@ ggsave(
 
 ggsave(
   "figures_cross/Platform_V_Display.pdf",
-  plot_cross_dimension_precent("platform", "display", vertical_padding = 0.8),
+  plot_cross_dimension_precent("platform", "display_technology", vertical_padding = 0.8),
   width = 7,
   height = 5.458,
   dpi = 600
 )
-
-#--------------------------
 
 ggsave(
   "figures_cross/Scenario_V_Measurements.png",
@@ -498,8 +370,6 @@ ggsave(
   dpi = 600
 )
 
-#----------------------------
-
 ggsave(
   "figures_cross/Driver_Presence_V_Measurements.png",
   plot_cross_dimension_precent("driver_presence_visibility", "measurement_domain"),
@@ -516,3 +386,18 @@ ggsave(
   dpi = 600
 )
 
+ggsave(
+  "figures_cross/Focus_Condition_V_Scenario.png",
+  plot_cross_dimension_precent("focus_condition", "scenario"),
+  width = 7,
+  height = 5.5,
+  dpi = 600
+)
+
+ggsave(
+  "figures_cross/Focus_Condition_V_Scenario.pdf",
+  plot_cross_dimension_precent("focus_condition", "scenario"),
+  width = 7,
+  height = 6,
+  dpi = 600
+)

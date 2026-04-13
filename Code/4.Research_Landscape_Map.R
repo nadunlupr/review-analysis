@@ -40,33 +40,34 @@ data$platform <- case_when(
 )
 
 # ============================================================
-# 3 Clean and expand scenario + measurements
+# 3 Clean and expand scenario + measurement_domain
 # ============================================================
 
 data$scenario <- as.character(data$scenario)
-data$measurements <- as.character(data$measurements)
+data$measurement_domain <- as.character(data$measurement_domain)
 
 data <- data %>%
   mutate(
     scenario = scenario %>%
       stringr::str_trim() %>%
       stringr::str_replace_all("\\s*\\+\\s*", "+"),
-    measurements = measurements %>%
+    measurement_domain = measurement_domain %>%
       stringr::str_trim() %>%
       stringr::str_replace_all("\\s*\\+\\s*", "+")
   ) %>%
   tidyr::separate_rows(scenario, sep = "\\+") %>%
-  tidyr::separate_rows(measurements, sep = "\\+") %>%
+  tidyr::separate_rows(measurement_domain, sep = "\\+") %>%
   mutate(
     scenario = case_when(
       scenario == "NDRT" ~ "NDRT",
       scenario == "Vigilance" ~ "Vigilance",
       TRUE ~ scenario
     ),
-    measurements = case_when(
-      str_to_lower(measurements) == "subjective" ~ "Subjective",
-      str_to_lower(measurements) == "objective" ~ "Objective",
-      TRUE ~ measurements
+    measurement_domain = case_when(
+      str_to_lower(measurement_domain) == "subjective" ~ "Subjective",
+      str_to_lower(measurement_domain) == "behaviour" ~ "Behaviour",
+      str_to_lower(measurement_domain) == "physiology" ~ "Physiology",
+      TRUE ~ measurement_domain
     )
   )
 
@@ -76,9 +77,9 @@ data <- data %>%
 
 landscape_data <- data %>%
   filter(!is.na(scenario), scenario != "",
-         !is.na(measurements), measurements != "",
+         !is.na(measurement_domain), measurement_domain != "",
          !is.na(platform), platform != "") %>%
-  count(scenario, measurements, platform)
+  count(scenario, measurement_domain, platform)
 
 # ============================================================
 # 5 Plot Research Landscape
@@ -87,8 +88,8 @@ landscape_data <- data %>%
 landscape_plot <- ggplot(
   landscape_data %>%
     mutate(
-      measurements = stringr::str_wrap(
-        as.character(measurements),
+      measurement_domain = stringr::str_wrap(
+        as.character(measurement_domain),
         width = 10,
         whitespace_only = FALSE
       ),
@@ -99,7 +100,7 @@ landscape_plot <- ggplot(
       )
     ),
   aes(
-    x = measurements,
+    x = measurement_domain,
     y = scenario,
     size = n,
     color = platform
@@ -116,7 +117,7 @@ landscape_plot <- ggplot(
   ) +
   labs(
     title = NULL,
-    x = "Measurement Type",
+    x = "Measurement Domain",
     y = "Study Scenario",
     size = "Number of Studies",
     color = "Platform"
@@ -217,12 +218,13 @@ ggsave(
   landscape_plot,
   width = 8,
   height =  10,
-  dpi = 300
+  dpi = 600
 )
 
 ggsave(
   "figures/research_landscape_map.pdf",
   landscape_plot,
   width = 8,
-  height = 10
+  height = 10,
+  dpi = 600
 )

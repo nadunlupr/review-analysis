@@ -1,5 +1,5 @@
 # ============================================================
-# Research landscape with left strips and grouped comfort factors
+# Research landscape with bottom strips and grouped comfort factors
 # Comfort Factor × Focus Condition, color = Scenario
 # ============================================================
 
@@ -204,7 +204,7 @@ display_levels <- c(vehicle_levels, user_levels)
 affective_levels <- c("Anxiety", "Affectivity", "Discomfort")
 physiological_levels <- c("Motion Sickness")
 cognitive_levels <- c("Attention", "Decision Making", "Mind Wandering")
-interaction_levels <- c("Sense of Agency", "Communication", "Taking Over Control", "Driving Style")
+interaction_levels <- c("Sense of Agency", "Communication", "Taking Over Control")
 
 focus_levels <- c(
   affective_levels,
@@ -234,20 +234,20 @@ landscape_data <- landscape_data %>%
   ) %>%
   dplyr::mutate(
     comfort_factor = factor(comfort_factor, levels = display_levels),
-    focus_condition = factor(focus_condition, levels = focus_levels),
-    scenario = stringr::str_wrap(as.character(scenario), width = 16)
+    focus_condition = factor(focus_condition, levels = rev(focus_levels)),
+    scenario = stringr::str_wrap(as.character(scenario), width = 32)
   )
 
-n_y <- length(display_levels)
-n_x <- length(focus_levels)
+n_x <- length(display_levels)
+n_y <- length(focus_levels)
 
 # ============================================================
-# 7 Shared row map and band positions
+# 7 Shared maps and band positions
 # ============================================================
 
-row_map <- tibble::tibble(
+col_map <- tibble::tibble(
   comfort_factor = display_levels,
-  y = seq_along(display_levels),
+  x = seq_along(display_levels),
   group = dplyr::case_when(
     comfort_factor %in% vehicle_levels ~ "Vehicle-related",
     comfort_factor %in% user_levels ~ "User-related",
@@ -255,13 +255,13 @@ row_map <- tibble::tibble(
   )
 )
 
-shared_bands <- row_map %>%
+shared_bands <- col_map %>%
   dplyr::filter(!is.na(group)) %>%
   dplyr::group_by(group) %>%
   dplyr::summarise(
-    ymin = min(y) - 0.5,
-    ymax = max(y) + 0.5,
-    ymid = mean(y),
+    xmin = min(x) - 0.5,
+    xmax = max(x) + 0.5,
+    xmid = mean(x),
     .groups = "drop"
   ) %>%
   dplyr::mutate(
@@ -272,34 +272,74 @@ shared_bands <- row_map %>%
     label = group
   )
 
-group_bands <- shared_bands
-tick_bands  <- shared_bands
-
 plot_bands <- shared_bands %>%
   dplyr::transmute(
-    xmin = 0.5,
-    xmax = length(focus_levels) + 0.5,
-    ymin = ymin,
-    ymax = ymax,
+    xmin = xmin,
+    xmax = xmax,
+    ymin = 0.5,
+    ymax = length(focus_levels) + 0.5,
     fill = fill
   )
 
-tick_df <- row_map %>%
+pad_lines_equal <- function(text, width = 18) {
+  wrapped <- stringr::str_wrap(text, width = width)
+  lines <- unlist(strsplit(wrapped, "\n", fixed = TRUE))
+  max_chars <- max(nchar(lines), na.rm = TRUE)
+  
+  padded <- vapply(
+    lines,
+    function(line) {
+      n_spaces <- max_chars - nchar(line)
+      paste0(line, paste(rep("&nbsp;", n_spaces), collapse = ""))
+    },
+    character(1)
+  )
+  
+  paste(padded, collapse = "<br>")
+}
+
+tick_df <- col_map %>%
   dplyr::transmute(
-    y = y,
+    x = dplyr::if_else(comfort_factor == "Trust", x + 0.18, x),
     label = stringr::str_wrap(comfort_factor, width = 13)
   )
 
+y_group_map <- tibble::tibble(
+  focus_condition = rev(focus_levels),
+  y = seq_along(rev(focus_levels))
+)
+
+y_group_bands <- tibble::tibble(
+  y_group = c("I/P", "CS", "PS", "AS"),
+  ymin = c(1 - 0.5, 4 - 0.5, 7 - 0.5, 8 - 0.5),
+  ymax = c(3 + 0.5, 6 + 0.5, 7 + 0.5, 10 + 0.5)
+) %>%
+  dplyr::mutate(
+    fill = dplyr::case_when(
+      y_group == "AS" ~ "#DDEBF7",
+      y_group == "PS" ~ "#EADCF8",
+      y_group == "CS" ~ "#F4CCCC",
+      y_group == "I/P" ~ "#D0E0E3"
+    ),
+    ymid = (ymin + ymax) / 2
+  )
+
+y_tick_df <- y_group_map %>%
+  dplyr::transmute(
+    y = y,
+    label = stringr::str_wrap(focus_condition, width = 12)
+  )
+
 # ============================================================
-# 8 Panel 1: main y title
+# 8 Left title
 # ============================================================
 
-p_title <- ggplot() +
+p_ytitle <- ggplot() +
   geom_text(
-    aes(x = 1, y = 1, label = "Comfort Factor"),
+    aes(x = 1, y = 1, label = "Focus Condition"),
     angle = 90,
     fontface = "bold",
-    size = 5.5
+    size = 7
   ) +
   xlim(0, 2) +
   ylim(0, 2) +
@@ -307,52 +347,30 @@ p_title <- ggplot() +
   theme(plot.margin = margin(0, 0, 0, 0))
 
 # ============================================================
-# 9 Panel 2: group strip
+# 9 Left y strip
 # ============================================================
 
-p_group <- ggplot() +
+p_yticks <- ggplot() +
   geom_rect(
-    data = group_bands,
-    aes(xmin = 0, xmax = 0.72, ymin = ymin, ymax = ymax, fill = fill),
-    color = NA,
-    alpha = 1,
-    inherit.aes = FALSE
-  ) +
-  geom_text(
-    data = group_bands,
-    aes(x = 0.36, y = ymid, label = label),
-    angle = 90,
-    fontface = "bold",
-    size = 4.3
-  ) +
-  scale_fill_identity() +
-  scale_x_continuous(limits = c(0, 0.72), expand = c(0, 0)) +
-  scale_y_continuous(
-    limits = c(0.5, n_y + 0.5),
-    breaks = NULL,
-    expand = c(0, 0)
-  ) +
-  coord_cartesian(clip = "off") +
-  theme_void() +
-  theme(plot.margin = margin(0, 0, 0, 0))
-
-# ============================================================
-# 10 Panel 3: tick-label strip
-# ============================================================
-
-p_ticks <- ggplot() +
-  geom_rect(
-    data = tick_bands,
+    data = y_group_bands,
     aes(xmin = 0, xmax = 1, ymin = ymin, ymax = ymax, fill = fill),
     inherit.aes = FALSE,
     color = NA,
     alpha = 1
   ) +
   scale_fill_identity() +
+  geom_text(
+    data = y_group_bands,
+    aes(x = 0.12, y = ymid, label = y_group),
+    hjust = 0,
+    vjust = 0.5,
+    fontface = "bold",
+    size = 6
+  ) +
   ggtext::geom_richtext(
-    data = tick_df,
+    data = y_tick_df,
     aes(
-      x = 0.05,
+      x = 0.34,
       y = y,
       label = gsub("\n", "<br>", label)
     ),
@@ -376,14 +394,14 @@ p_ticks <- ggplot() +
   theme(plot.margin = margin(0, 0, 0, 0))
 
 # ============================================================
-# 11 Panel 4: bubble plot
+# 10 Bubble plot
 # ============================================================
 
 p_bubble <- ggplot(
   landscape_data,
   aes(
-    x = focus_condition,
-    y = comfort_factor,
+    x = comfort_factor,
+    y = focus_condition,
     size = n,
     color = scenario
   )
@@ -398,7 +416,16 @@ p_bubble <- ggplot(
   scale_fill_identity() +
   geom_point(alpha = 0.9) +
   scale_size(range = c(3, 14)) +
-  scale_color_viridis_d(option = "D", end = 0.9) +
+  scale_color_manual(values = c(
+    "#0072B2",
+    "#D55E00",
+    "#009E73",
+    "#CC79A7",
+    "#E69F00",
+    "#56B4E9",
+    "#F0E442",
+    "#000000"
+  )) +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_discrete(expand = c(0, 0)) +
   labs(
@@ -410,7 +437,8 @@ p_bubble <- ggplot(
   theme_minimal(base_size = 16) +
   theme(
     panel.grid.minor = element_blank(),
-    panel.grid.major.y = element_blank(),
+    panel.grid.major.y = element_line(color = "grey75", linewidth = 0.6),
+    panel.grid.major.x = element_blank(),
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.title.x = element_blank(),
@@ -418,11 +446,11 @@ p_bubble <- ggplot(
     axis.title.y = element_blank(),
     legend.position = "bottom",
     legend.direction = "horizontal",
-    legend.box = "vertical",
-    legend.box.just = "left",
+    legend.box = "horizontal",
+    legend.box.just = "center",
     legend.justification = "center",
     legend.title = element_text(face = "bold", color = "black"),
-    legend.text = element_text(color = "black"),
+    legend.text = element_text(color = "black", size = 16),
     legend.key.height = unit(0.9, "lines"),
     legend.key.width = unit(1.2, "lines"),
     panel.border = element_rect(color = "grey40", fill = NA, linewidth = 0.8),
@@ -441,59 +469,22 @@ p_bubble <- ggplot(
     color = guide_legend(
       title.position = "left",
       title.hjust = 0,
-      title.vjust = 1,
+      title.vjust = 0.5,
       direction = "horizontal",
-      nrow = ceiling(length(unique(landscape_data$scenario)) / 4),
+      nrow = 1,
       byrow = TRUE,
-      order = 2
+      order = 2,
+      override.aes = list(size = 4)
     )
   )
 
 # ============================================================
-# 12 X-axis grouping data
-# ============================================================
-
-x_group_map <- tibble::tibble(
-  focus_condition = focus_levels,
-  x = seq_along(focus_levels),
-  x_group = dplyr::case_when(
-    focus_condition %in% affective_levels ~ "AS",
-    focus_condition %in% physiological_levels ~ "PS",
-    focus_condition %in% cognitive_levels ~ "CS",
-    focus_condition %in% interaction_levels ~ "I/P"
-  )
-)
-
-x_group_bands <- x_group_map %>%
-  dplyr::group_by(x_group) %>%
-  dplyr::summarise(
-    xmin = min(x) - 0.5,
-    xmax = max(x) + 0.5,
-    xmid = mean(x),
-    .groups = "drop"
-  ) %>%
-  dplyr::mutate(
-    fill = dplyr::case_when(
-      x_group == "AS" ~ "#DDEBF7",
-      x_group == "PS" ~ "#EADCF8",
-      x_group == "CS" ~ "#F4CCCC",
-      x_group == "I/P" ~ "#D0E0E3"
-    )
-  )
-
-x_tick_df <- x_group_map %>%
-  dplyr::transmute(
-    x = x,
-    label = stringr::str_wrap(focus_condition, width = 12)
-  )
-
-# ============================================================
-# 13 Panel 5: x tick-label strip
+# 11 Bottom strips
 # ============================================================
 
 p_xticks <- ggplot() +
   geom_rect(
-    data = x_group_bands,
+    data = shared_bands,
     aes(xmin = xmin, xmax = xmax, ymin = 0, ymax = 1, fill = fill),
     inherit.aes = FALSE,
     color = NA,
@@ -501,20 +492,19 @@ p_xticks <- ggplot() +
   ) +
   scale_fill_identity() +
   ggtext::geom_richtext(
-    data = x_tick_df,
+    data = tick_df,
     aes(
-      x = x,
-      y = 0.06,
+      x = x - 0.32,
+      y = 0.82,
       label = gsub("\n", "<br>", label)
     ),
-    angle = 90,
     hjust = 0,
-    vjust = 0.5,
+    vjust = 1,
     fill = NA,
     label.color = NA,
     label.padding = grid::unit(c(0, 0, 0, 0), "pt"),
     label.margin = grid::unit(c(0, 0, 0, 0), "pt"),
-    size = 3.9,
+    size = 5,
     lineheight = 1.0
   ) +
   scale_x_continuous(limits = c(0.5, n_x + 0.5), expand = c(0, 0)) +
@@ -523,40 +513,32 @@ p_xticks <- ggplot() +
   theme_void() +
   theme(plot.margin = margin(0, 0, 0, 0))
 
-# ============================================================
-# 14 Panel 6: x group-label strip
-# ============================================================
-
 p_xgroup <- ggplot() +
   geom_rect(
-    data = x_group_bands,
+    data = shared_bands,
     aes(xmin = xmin, xmax = xmax, ymin = 0, ymax = 1, fill = fill),
     inherit.aes = FALSE,
     color = NA,
     alpha = 1
   ) +
   geom_text(
-    data = x_group_bands,
-    aes(x = xmid, y = 0.5, label = x_group),
+    data = shared_bands,
+    aes(x = xmid, y = 0.50, label = label),
     fontface = "bold",
-    size = 3.6,
+    size = 6,
     lineheight = 0.95
   ) +
   scale_fill_identity() +
   scale_x_continuous(limits = c(0.5, n_x + 0.5), expand = c(0, 0)) +
   scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) +
   theme_void() +
-  theme(plot.margin = margin(0, 0, 0, 0))
-
-# ============================================================
-# 15 Panel 7: x main title
-# ============================================================
+  theme(plot.margin = margin(t = 18, r = 0, b = 0, l = 0))
 
 p_xtitle <- ggplot() +
   geom_text(
-    aes(x = 0.5, y = 0.5, label = "Focus Condition"),
+    aes(x = 0.5, y = 0.5, label = "Comfort Factor"),
     fontface = "bold",
-    size = 4.8
+    size = 7
   ) +
   xlim(0, 1) +
   ylim(0, 1) +
@@ -564,70 +546,67 @@ p_xtitle <- ggplot() +
   theme(plot.margin = margin(6, 0, 0, 0))
 
 # ============================================================
-# 16 Build top row and bottom row separately
+# 12 Layout
 # ============================================================
 
-top_row <- patchwork::wrap_plots(
-  p_title, p_group, p_ticks, p_bubble,
+main_row <- patchwork::wrap_plots(
+  p_ytitle, p_yticks, p_bubble,
   nrow = 1,
-  widths = c(0.60, 0.45, 1.55, 8.0)
+  widths = c(0.35, 1.10, 8.90)
 )
 
 p_blank1 <- ggplot() + theme_void() + theme(plot.margin = margin(0, 0, 0, 0))
 p_blank2 <- ggplot() + theme_void() + theme(plot.margin = margin(0, 0, 0, 0))
-p_blank3 <- ggplot() + theme_void() + theme(plot.margin = margin(0, 0, 0, 0))
 
 bottom_right <- patchwork::wrap_plots(
   p_xticks,
   p_xgroup,
   p_xtitle,
   ncol = 1,
-  heights = c(1.15, 0.25, 0.45)
+  heights = c(0.90, 0.40, 0.45)
 )
 
 bottom_row <- patchwork::wrap_plots(
-  p_blank1, p_blank2, p_blank3, bottom_right,
+  p_blank1, p_blank2, bottom_right,
   nrow = 1,
-  widths = c(0.60, 0.45, 1.55, 8.0)
+  widths = c(0.35, 1.10, 8.90)
 )
 
-# ============================================================
-# 17 Final combine
-# ============================================================
-
 final_plot <- patchwork::wrap_plots(
-  top_row,
+  main_row,
   bottom_row,
   ncol = 1,
-  heights = c(8.0, 2.15),
+  heights = c(4, 1.85),
   guides = "collect"
 ) & theme(
   plot.margin = margin(0, 0, 0, 0),
   legend.position = "bottom",
-  legend.box = "vertical",
-  legend.box.just = "left",
+  legend.box = "horizontal",
+  legend.box.just = "center",
   legend.justification = "center"
 )
 
 final_plot
 
 # ============================================================
-# 18 Save
+# 13 Save
 # ============================================================
 
 dir.create("figures", showWarnings = FALSE)
 
 ggsave(
-  "figures/research_landscape_comfort.png",
+  "figures/research_landscape_comfort_Horizontal.png",
   final_plot,
-  width = 8,
-  height = 15,
+  width = 22,
+  height = 7,
   dpi = 300
 )
 
 ggsave(
-  "figures/research_landscape_comfort.pdf",
+  "figures/research_landscape_comfort_Horizontal.pdf",
   final_plot,
-  width = 8,
-  height = 15
+  width = 22,
+  height = 7,
+  dpi = 600
 )
+

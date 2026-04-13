@@ -65,5 +65,5 @@ Disposition to Nausea",None,Subjective,Motion Sickness
 Disposition to Nausea",Nausea Reducing Features,Subjective + Behavioural,Affectivity + Motion Sickness
 47,40,https://discovery.ucl.ac.uk/id/eprint/10212163/,Monsuur et. al,2024,Simulator,Fully Automated,Cabin Virtual-Visible,0,HMD-VR,Front Passenger Seat,No Driver,Ride-along,Visual,User,"Perceived safety +
 Trust",None,Subjective + Physiological,Affectivity + Anxiety
-48,41,https://dl.acm.org/doi/10.1145/3409120.3410639,Alpers et. al,2020,Real-world Driving,Fully Automated,Cabin Real-Visible,6,2D Display,Rear Passenger Seat,Driver Present-Concealed,Ride-along,Haptic + Auditory,User,"Perceived safety +
+48,41,https://dl.acm.org/doi/10.1145/3409120.3410639,Alpers et. al,2020,Real-world Driving,Wizard-of-Oz,Cabin Real-Visible,6,2D Display,Rear Passenger Seat,Driver Present-Concealed,Ride-along,Haptic + Auditory,User,"Perceived safety +
 Trust",None,Subjective + Physiological,Communication + Anxiety

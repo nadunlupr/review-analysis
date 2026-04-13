@@ -44,7 +44,7 @@ split_plus_vars <- vars
 plot_gradients <- list(
   platform = c("#F3E8FF", "#B999E5", "#5B3C88"),
   driving_mode = c("#F3E8FF", "#B999E5", "#5B3C88"),
-  display = c("#F3E8FF", "#B999E5", "#5B3C88"),
+  display_technology = c("#F3E8FF", "#B999E5", "#5B3C88"),
   scenario = c("#FDEBE2", "#F2A97E", "#C65D2E"),
   measurements = c("#FBE4EC", "#E78FB3", "#A63D6E"),
   motion_dof = c("#F3E8FF", "#B999E5", "#5B3C88"),
@@ -73,9 +73,9 @@ group_focus_condition <- function(x) {
     stringr::str_to_lower()
   
   dplyr::case_when(
-    x_clean %in% c("anxiety", "affectivity", "discomfort") ~ "Affective States",
-    x_clean %in% c("motion sickness") ~ "Physiological States",
-    x_clean %in% c("attention", "decision making", "mind wandering", "mind wondering") ~ "Cognitive States",
+    x_clean %in% c("anxiety", "affectivity", "discomfort") ~ "Affective",
+    x_clean %in% c("motion sickness") ~ "Physiology",
+    x_clean %in% c("attention", "decision making", "mind wandering", "mind wondering") ~ "Cognitive",
     x_clean %in% c("communication", "sense of agency", "taking over control", "driving style") ~ "Interaction/Performance",
     TRUE ~ NA_character_
   )
@@ -105,9 +105,9 @@ plot_distribution <- function(variable) {
           stringr::str_wrap(focus_condition_grouped, width = 14, whitespace_only = FALSE),
           levels = stringr::str_wrap(
             c(
-              "Affective States",
-              "Physiological States",
-              "Cognitive States",
+              "Affective",
+              "Physiology",
+              "Cognitive",
               "Interaction/Performance"
             ),
             width = 14,
@@ -452,14 +452,14 @@ ggsave(
 
 ggsave(
   "figures/MeasurementDomainCount.png",
-  plots[[11]],
+  plots[[13]],
   width = 7,
   height = 5,
   dpi = 600
 )
 ggsave(
   "figures/MeasurementDomainCount.pdf",
-  plots[[11]],
+  plots[[13]],
   width = 7,
   height = 5,
   dpi = 600
@@ -468,17 +468,17 @@ ggsave(
 
 ggsave(
   "figures/FocusConditionGroupedCount.png",
-  plots[[12]],
+  plots[[14]],
   width = 7,
   height = 5,
   dpi = 600
 )
 ggsave(
   "figures/FocusConditionGroupedCount.pdf",
-  plots[[12]],
+  plots[[14]],
   width = 7,
   height = 5,
   dpi = 600
 )
 
-setdiff(unique(group_focus_condition(data$focus_condition)), c("Affective States", "Physiological States", "Cognitive States", "Interaction/Performance"))
+setdiff(unique(group_focus_condition(data$focus_condition)), c("Affective", "Physiology", "Cognitive", "Interaction/Performance"))

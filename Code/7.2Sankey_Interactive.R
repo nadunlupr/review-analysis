@@ -2,13 +2,14 @@
 # AV Passenger Experience Design Space – Interactive Sankey
 # ============================================================
 
-library(networkD3)
-library(dplyr)
-library(purrr)
-library(stringr)
-library(janitor)
-library(htmlwidgets)
-library(jsonlite)
+packages <- c("networkD3", "dplyr", "purrr", "stringr", "janitor", "htmlwidgets", "jsonlite")
+
+for (pkg in packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+  library(pkg, character.only = TRUE)
+}
 
 # ============================================================
 # 1 Load dataset
@@ -102,6 +103,7 @@ build_sankey <- function(df, stage_cols, stage_labels){
     fontSize = 14,
     nodeWidth = 12,
     nodePadding = 8,
+    fontFamily = "sans",
     
     sinksRight = FALSE,
     colourScale = colourScale,
@@ -127,35 +129,38 @@ var svg = d3.select(el).select('svg');
 var stageNames = %s;
 
 var height = +svg.attr('height') || 500;
-
 var y = height - 5;
 var lineGap = 15;
 
 var nodes = svg.selectAll('g.node').data();
 
-var xs = Array.from(new Set(nodes.map(function(d){return d.x;})))
-.sort(function(a,b){return a-b;});
+var xs = Array.from(new Set(nodes.map(function(d){ return d.x; })))
+  .sort(function(a,b){ return a-b; });
 
 xs.forEach(function(xpos,i){
 
-var lines = stageNames[i] || ['',''];
+  var lines = stageNames[i] || ['',''];
 
-var txt = svg.append('text')
-
-.attr('x',xpos + 5)
-.attr('y',y)
-
-.style('font-size','14px')
-.style('fill','#555');
-
-txt.append('tspan')
-.attr('x',xpos+5)
-.text(lines[0]);
+  var txt = svg.append('text')
+  .attr('x', xpos + 5)
+  .attr('y', y)
+  .style('font-size','14px')
+  .style('fill','#000')
+  .style('font-family','sans-serif')
+  .style('font-weight','bold');
 
 txt.append('tspan')
-.attr('x',xpos+5)
-.attr('dy',lineGap)
-.text(lines[1]);
+  .attr('x', xpos + 5)
+  .text(lines[0]);
+
+txt.append('tspan')
+  .attr('x', xpos + 5)
+  .attr('dy', lineGap)
+  .text(lines[1]);
+
+svg.selectAll('g.node text')
+  .style('font-family', 'sans-serif')
+  .style('font-weight', 'normal');
 
 });
 
@@ -165,49 +170,94 @@ txt.append('tspan')
 
 function drawLabelBoxes(){
 
-svg.selectAll('g.node').each(function(){
+  svg.selectAll('g.node').each(function(){
 
-var g = d3.select(this);
+    var g = d3.select(this);
+    var text = g.select('text');
 
-var text = g.select('text');
+    if(text.empty()) return;
 
-if(text.empty()) return;
+    g.selectAll('rect.label-bg').remove();
 
-var bb = text.node().getBBox();
+    var bb = text.node().getBBox();
 
-g.insert('rect','text')
+    var leftPad = 4;
+    var rightPad = 18;   // extra space to the right
+    var topPad = 2;
+    var bottomPad = 2;
 
-.attr('x',bb.x - 4)
-.attr('y',bb.y - 2)
-.attr('width',bb.width + 8)
-.attr('height',bb.height + 4)
+    g.insert('rect', 'text')
+      .attr('class', 'label-bg')
+      .attr('x', bb.x - leftPad)
+      .attr('y', bb.y - topPad)
+      .attr('width', bb.width + leftPad + rightPad)
+      .attr('height', bb.height + topPad + bottomPad)
+      .attr('rx', 4)
+      .attr('ry', 4)
+      .style('fill', 'white')
+      .style('opacity', 0.7)
+      .style('stroke', '#999')
+      .style('stroke-width', 0.4);
 
-.attr('rx',4)
-.attr('ry',4)
-
-.style('fill','white')
-.style('opacity',0.7)
-.style('stroke','#999')
-.style('stroke-width',0.4);
-
-});
+  });
 
 }
 
 drawLabelBoxes();
-// ---- Make nodes grey ----
 
-d3.select(el)
-.selectAll('.node rect')
-.style('fill','#D9D9D9')
-.style('stroke','#888');
+// --------------------------------------
+// Make all actual node rects grey first
+// --------------------------------------
+
+svg.selectAll('g.node').each(function(){
+  var g = d3.select(this);
+
+  // first rect = actual sankey node rect
+  var nodeRect = d3.select(g.selectAll('rect').nodes()[0]);
+
+  nodeRect
+    .style('fill','#D9D9D9')
+    .style('stroke','#888');
+});
+
+// --------------------------------------
+// Color only the first column (Platform)
+// --------------------------------------
+
+var minX = d3.min(nodes, function(d){ return d.x; });
+
+svg.selectAll('g.node').each(function(d){
+
+  var g = d3.select(this);
+  var label = (d.name || d.label || '').trim();
+
+  // first rect = actual sankey node rect
+  var nodeRect = d3.select(g.selectAll('rect').nodes()[0]);
+
+  if(d.x === minX){
+
+    if(label === 'Simulator'){
+      nodeRect
+        .style('fill','#4E79A7')
+        .style('stroke','#4E79A7');
+    }
+
+    if(label === 'Real-world'){
+      nodeRect
+        .style('fill','#F28E2B')
+        .style('stroke','#F28E2B');
+    }
+  }
+
+});
+svg.selectAll('g.node text')
+  .style('font-family', 'sans-serif');
 
 }
 ",
-jsonlite::toJSON(stage_labels,auto_unbox=TRUE)
+jsonlite::toJSON(stage_labels, auto_unbox = TRUE)
     )
   )
-  
   return(p)
   
 }
@@ -236,7 +286,6 @@ exp_labels <- list(
 
 exp_sankey <- build_sankey(data,exp_cols,exp_labels)
 exp_sankey
-
 
 # ============================================================
 # 6 Study Focus Sankey
@@ -308,3 +357,8 @@ full_labels <- list(
 
 full_sankey <- build_sankey(data,full_cols,full_labels)
 full_sankey
+
+saveWidget(exp_sankey, "exp_sankey.html", selfcontained = TRUE)
+saveWidget(focus_sankey, "focus_sankey.html", selfcontained = TRUE)
+saveWidget(eval_sankey, "eval_sankey.html", selfcontained = TRUE)
+saveWidget(full_sankey, "full_sankey.html", selfcontained = TRUE)

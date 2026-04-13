@@ -2,6 +2,11 @@
 # Sankey Diagram Analysis
 # ======================================
 
+packages <- c("tidyverse", "ggalluvial", "janitor")
+
+missing_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
+if (length(missing_packages) > 0) install.packages(missing_packages)
+
 library(tidyverse)
 library(ggalluvial)
 library(janitor)
